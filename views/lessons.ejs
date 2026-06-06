@@ -26,55 +26,65 @@
                     <button name="submit"></button>
                     <button type="button" class="clear"></button>
                 </form>
-                <ul class="curriculum-sections">
+                <div class="course-curriculum" id="learn-press-course-curriculum" bis_skin_checked="1">
+                    <div class="curriculum-scrollable" bis_skin_checked="1">
+                        <ul class="curriculum-sections">
 
-                <% course.sections.forEach(section => { %>
+                        <% course.sections.forEach(section => { %>
 
-                <li class="section">
+                        <li class="section" id="section-section-1-1" data-id="section-1-1" data-section-id="1">
 
-                    <div class="section-header">
-                        <div class="section-left">
-                            <h5 class="section-title">
-                                <%= section.title %>
-                            </h5>
-                        </div>
-                    </div>
+                            <div class="section-header" bis_skin_checked="1">
+                                <div class="section-left" bis_skin_checked="1">
+                                    <h5 class="section-title">
+                                        <%= section.title %>
+                                    </h5>
+                                    <span class="section-toggle">
+                                        <i class="fas fa-caret-down"></i>
+                                        <i class="fas fa-caret-up"></i>
+                                    </span>
+                                </div>
+                            </div>
 
-                    <ul class="section-content">
+                            <ul class="section-content">
 
-                        <% section.lessons.forEach(item => { %>
+                                <% section.lessons.forEach(item => { %>
 
-                        <li class="course-item">
+                                <li class="course-item course-item-lp_lesson course-item-125 item-preview has-status" data-id="125">
 
-                            <a
-                                class="section-item-link"
-                                href="/course/<%= course.slug %>/lesson/<%= item.session %>">
+                                    <a
+                                        class="section-item-link"
+                                        href="/course/<%= course.slug %>/lesson/<%= item.session %>" bis_skin_checked="1">
 
-                                <span class="item-name">
-                                    <%= item.title %>
-                                </span>
+                                        <span class="item-name">
+                                            <%= item.title %>
+                                        </span>
+                                        <div class="course-item-meta" bis_skin_checked="1">
+                                            <span class="item-meta course-item-preview" data-preview="Preview"></span>
+                                        </div>
+                                    </a>
 
-                            </a>
+                                </li>
+
+                                <% }) %>
+
+                            </ul>
 
                         </li>
 
                         <% }) %>
 
-                    </ul>
-
-                </li>
-
-                <% }) %>
-
-                </ul>
+                        </ul>
+                    </div>
+                </div>
             </div>
             <div id="popup-content" bis_skin_checked="1">
                 <div id="learn-press-content-item" bis_skin_checked="1">
                     <div class="content-item-scrollable" bis_skin_checked="1">
                         <div class="content-item-wrap" bis_skin_checked="1">
                             <div class="content-item-summary" bis_skin_checked="1">
-                                    <h3 class="course-item-title question-title"><%= lesson.title %></h3>                                
-                                    <div class="content-item-description lesson-description" bis_skin_checked="1">
+                                <h3 class="course-item-title question-title"><%= lesson.title %></h3>                                
+                                <div class="content-item-description lesson-description" bis_skin_checked="1">
                                     <style>.h_iframe-aparat_embed_frame{position:relative;}.h_iframe-aparat_embed_frame .ratio{display:block;width:100%;height:auto;}.h_iframe-aparat_embed_frame iframe{position:absolute;top:0;left:0;width:100%;height:100%;}</style><div class="h_iframe-aparat_embed_frame"><span style="display: block;padding-top: 57%"></span><iframe   src="<%= lesson.video %>" allowfullscreen></iframe></div>
                                     <% lesson.content.forEach(paragraph => { %>
                                         <p>

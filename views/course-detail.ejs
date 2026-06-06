@@ -124,10 +124,10 @@
 
                                             <% course.sections.forEach(section => { %>
 
-                                            <li class="section">
+                                            <li class="section" id="section-section-1-38" data-id="section-1-38" data-section-id="38">
 
-                                                <div class="section-header">
-                                                    <div class="section-left">
+                                                <div class="section-header" bis_skin_checked="1">
+                                                    <div class="section-left" bis_skin_checked="1">
 
                                                         <h5 class="section-title">
                                                             <%= section.title %>
@@ -136,7 +136,10 @@
                                                                 <%= section.description %>
                                                             </p>
                                                         </h5>
-
+                                                        <span class="section-toggle">
+                                                            <i class="fas fa-caret-down"></i>
+                                                            <i class="fas fa-caret-up"></i>
+                                                        </span>
                                                     </div>
                                                 </div>
 
@@ -144,16 +147,17 @@
 
                                                     <% section.lessons.forEach(lesson => { %>
 
-                                                    <li class="course-item">
+                                                    <li class="course-item course-item-lp_lesson course-item-1027 item-preview has-status" data-id="1027">
 
                                                         <a
                                                             class="section-item-link"
-                                                            href="/course/<%= course.slug %>/lesson/<%= lesson.session %>">
-
+                                                            href="/course/<%= course.slug %>/lesson/<%= lesson.session %>" bis_skin_checked="1">
                                                             <span class="item-name">
                                                                 <%= lesson.title %>
                                                             </span>
-
+                                                            <div class="course-item-meta" bis_skin_checked="1">
+                                                                <span class="item-meta course-item-preview" data-preview="پیش نمایش"></span>
+                                                            </div>
                                                         </a>
 
                                                     </li>
