@@ -1,0 +1,110 @@
+<!-- lessons part here -->
+<div id="content" class="site-content" bis_skin_checked="1">
+    <div class="lp-archive-courses" bis_skin_checked="1">
+        <ul class="learn-press-breadcrumb">
+            <li><a href="index.html" bis_skin_checked="1"><span>خانه</span></a></li>
+            <li class="breadcrumb-delimiter"><i class="fas fa-chevron-left"></i></li>
+            <li><a href="course-list.html" bis_skin_checked="1"><span>همه دوره ها</span></a></li>
+            <li class="breadcrumb-delimiter"><i class="fas fa-chevron-left"></i></li>
+            <li><a href="course-category.html" bis_skin_checked="1"><span>علوم کامپیوتر</span></a></li>
+            <li class="breadcrumb-delimiter"><i class="fas fa-chevron-left"></i></li>
+            <li><span>شبکه امنیت کامپیوتری</span></li>
+        </ul>
+        <div id="popup-course" class="course-summary" bis_skin_checked="1">
+            <input type="checkbox" id="sidebar-toggle">
+            <div id="popup-header" bis_skin_checked="1">
+                <div class="popup-header__inner" bis_skin_checked="1">
+                    <h2 class="course-title">
+                        <a href="course-details.html" bis_skin_checked="1">شبکه امنیت کامپیوتری</a>
+                    </h2>
+                </div>
+                <a href="course-details.html" class="back-course" bis_skin_checked="1"><i class="fa fa-times"></i></a>
+            </div>
+            <div id="popup-sidebar" bis_skin_checked="1">
+                <form method="post" class="search-course">
+                    <input type="text" name="s" autocomplete="off" placeholder="جستجوی محتوای دوره ها">
+                    <button name="submit"></button>
+                    <button type="button" class="clear"></button>
+                </form>
+                <ul class="curriculum-sections">
+
+                <% course.sections.forEach(section => { %>
+
+                <li class="section">
+
+                    <div class="section-header">
+                        <div class="section-left">
+                            <h5 class="section-title">
+                                <%= section.title %>
+                            </h5>
+                        </div>
+                    </div>
+
+                    <ul class="section-content">
+
+                        <% section.lessons.forEach(item => { %>
+
+                        <li class="course-item">
+
+                            <a
+                                class="section-item-link"
+                                href="/course/<%= course.slug %>/lesson/<%= item.session %>">
+
+                                <span class="item-name">
+                                    <%= item.title %>
+                                </span>
+
+                            </a>
+
+                        </li>
+
+                        <% }) %>
+
+                    </ul>
+
+                </li>
+
+                <% }) %>
+
+                </ul>
+            </div>
+            <div id="popup-content" bis_skin_checked="1">
+                <div id="learn-press-content-item" bis_skin_checked="1">
+                    <div class="content-item-scrollable" bis_skin_checked="1">
+                        <div class="content-item-wrap" bis_skin_checked="1">
+                            <div class="content-item-summary" bis_skin_checked="1">
+                                    <h3 class="course-item-title question-title"><%= lesson.title %></h3>                                
+                                    <div class="content-item-description lesson-description" bis_skin_checked="1">
+                                    <style>.h_iframe-aparat_embed_frame{position:relative;}.h_iframe-aparat_embed_frame .ratio{display:block;width:100%;height:auto;}.h_iframe-aparat_embed_frame iframe{position:absolute;top:0;left:0;width:100%;height:100%;}</style><div class="h_iframe-aparat_embed_frame"><span style="display: block;padding-top: 57%"></span><iframe   src="<%= lesson.video %>" allowfullscreen></iframe></div>
+                                    <% lesson.content.forEach(paragraph => { %>
+                                        <p>
+                                            <%= paragraph %>
+                                        </p>
+                                    <% }) %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="popup-footer" bis_skin_checked="1">
+                <div class="course-item-nav" data-nav="all" bis_skin_checked="1">
+                    <div class="prev">
+                        <% if (lesson.session > 1) { %>
+                            <a href="/course/<%= course.slug %>/lesson/<%= lesson.session - 1 %>">
+                                قبلی
+                            </a>
+                        <% } %>
+                    </div>
+
+                    <div class="next">
+                        <a href="/course/<%= course.slug %>/lesson/<%= lesson.session + 1 %>">
+                            بعدی
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- lessons part end -->

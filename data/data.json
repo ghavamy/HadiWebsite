@@ -33,5 +33,109 @@
       "content": "<p>محتوای کامل مقاله تغذیه در اینجا قرار می‌گیرد...</p>",
       "tags": ["تغذیه", "تناسب اندام", "سلامتی"]
     }
+  ],
+
+  "courses": [
+    {
+      "slug": "hoosh-va-estedad-tahlili",
+      "title": "هوش و استعداد تحلیلی فرهنگیان",
+      "category": "فرهنگیان",
+      "teacher": "هادی",
+      "teacherImage": "/assets/img/author_5.jpg",
+      "image": "/assets/img/popular_item_2.png",
+      "price": "120000",
+      "duration": "10 هفته",
+      "level": "همه مراحل",
+
+      "requirements": [
+        "آشنایی اولیه با آزمون فرهنگیان",
+        "داشتن دفترچه یادداشت"
+      ],
+
+      "outcomes": [
+        "افزایش سرعت حل سوالات",
+        "آمادگی برای آزمون"
+      ],
+
+      "targetAudience": [
+        "داوطلبان فرهنگیان",
+        "دانشجویان"
+      ],
+
+      "overview": [
+        "توضیح اول دوره",
+        "توضیح دوم دوره"
+      ],
+
+      "faqs": [
+        {
+          "question": "آیا دوره آپدیت می‌شود؟",
+          "answer": "بله"
+        },
+        {
+          "question": "آیا پشتیبانی دارد؟",
+          "answer": "بله"
+        }
+      ],
+
+      "sections": [
+        {
+          "title": "بخش اول",
+          "description": "مقدمات",
+
+          "lessons": [
+            {
+              "session": 1,
+              "title": "معرفی دوره",
+              "video": "https://www.aparat.com/video/video/embed/videohash/cnc876q/vt/frame",
+              "content": 
+              [
+                "متن جلسه اول",
+                "ادامه جلسه اول"
+              ]
+            },
+
+            {
+              "session": 2,
+              "title": "هوش تحلیلی 1",
+              "video": "https://...",
+              "content": [
+                "متن جلسه دوم"
+              ]
+            }
+          ]
+        },
+
+        {
+          "title": "بخش دوم",
+          "description": "حل تست",
+
+          "lessons": [
+            {
+              "session": 3,
+              "title": "حل تست 1",
+              "video": "https://...",
+              "content": [
+                "متن جلسه سوم"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "moarefi-reshteh-ha",
+      "title": "معرفی رشته های دانشگاهی",
+      "category": "مشاوره",
+      "instructor": "گروه مشاوره",
+      "duration": "10 هفته",
+      "level": "همه سطوح",
+      "lessons": 11,
+      "quizzes": 1,
+      "students": 0,
+      "price": "160 هزار تومان",
+      "image": "/assets/img/course/معرفی رشته ها دانشگاهی.png",
+      "excerpt": "توضیحات کوتاه دوره..."
+    }
   ]
 }

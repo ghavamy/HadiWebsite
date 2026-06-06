@@ -1,0 +1,152 @@
+<!-- courses part here -->
+<div id="content" class="site-content" bis_skin_checked="1">
+    <div class="lp-archive-courses" bis_skin_checked="1">
+        <ul class="learn-press-breadcrumb">
+            <li><a href="index.html" bis_skin_checked="1"><span>خانه</span></a></li>
+            <li class="breadcrumb-delimiter"><i class="fas fa-chevron-left"></i></li>
+            <li><span>همه دوره ها</span></li>
+        </ul>
+        <div class="lp-content-area" bis_skin_checked="1">
+            <header class="learn-press-courses-header">
+                <h1>همه دوره ها</h1>
+            </header>
+            <div class="lp-courses-bar list" bis_skin_checked="1">
+                <form class="search-courses" method="get" action="index.html">
+                    <input type="hidden" name="post_type" value="lp_course">
+                    <input type="hidden" name="taxonomy" value="">
+                    <input type="hidden" name="term_id" value="">
+                    <input type="hidden" name="term" value="">
+                    <input type="text" placeholder="جستجو دوره" name="s" value="">
+                    <button type="submit"><i class="fas fa-search"></i></button>
+                </form>
+                <div class="switch-layout" bis_skin_checked="1">
+                    <input type="radio" name="lp-switch-layout-btn" value="grid" id="lp-switch-layout-btn-grid" checked="checked">
+                    <label class="switch-btn grid" title="Switch to grid" for="lp-switch-layout-btn-grid"></label>
+                    <input type="radio" name="lp-switch-layout-btn" value="list" id="lp-switch-layout-btn-list">
+                    <label class="switch-btn list" title="Switch to list" for="lp-switch-layout-btn-list"></label>
+                </div>
+            </div>
+            <ul class="learn-press-courses" data-layout="grid">
+
+            <% courses.forEach(course => { %>
+
+            <li class="lp_course course">
+                <div class="course-item">
+
+                    <div class="course-wrap-thumbnail">
+                        <div class="course-thumbnail">
+                            <a href="/course/<%= course.slug %>">
+                                <div class="thumbnail-preview">
+                                    <div class="thumbnail">
+                                        <div class="centered">
+                                            <img
+                                                width="370"
+                                                height="280"
+                                                src="<%= course.image %>"
+                                                alt="<%= course.title %>"
+                                            >
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="course-content">
+
+                        <div class="course-categories">
+                            <a href="#">
+                                <%= course.category %>
+                            </a>
+                        </div>
+
+                        <span class="course-instructor">
+                            <a href="#">
+                                <span><%= course.instructor %></span>
+                            </a>
+                        </span>
+
+                        <a
+                            href="/course/<%= course.slug %>"
+                            class="course-permalink"
+                        >
+                            <h3 class="course-title">
+                                <%= course.title %>
+                            </h3>
+                        </a>
+
+                        <div class="course-wrap-meta">
+
+                            <div class="meta-item meta-item-duration">
+                                <%= course.duration %>
+                            </div>
+
+                            <div class="meta-item meta-item-level">
+                                <%= course.level %>
+                            </div>
+
+                            <div class="meta-item meta-item-lesson">
+                                <span class="meta-number">
+                                    <%= course.lessons %> درس
+                                </span>
+                            </div>
+
+                            <div class="meta-item meta-item-quiz">
+                                <span class="meta-number">
+                                    <%= course.quizzes %> آزمون
+                                </span>
+                            </div>
+
+                            <div class="meta-item meta-item-student">
+                                <span class="meta-number">
+                                    <%= course.students %> دانش آموز
+                                </span>
+                            </div>
+
+                        </div>
+
+                        <div class="separator"></div>
+
+                        <div class="course-info">
+
+                            <div class="course-excerpt">
+                                <%= course.excerpt %>
+                            </div>
+
+                            <div class="clearfix"></div>
+
+                            <div class="course-footer">
+                                <div class="course-price">
+                                    <span class="price">
+                                        <%= course.price %>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="course-readmore">
+                                <a href="/course/<%= course.slug %>">
+                                    بیشتر
+                                </a>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </li>
+
+            <% }) %>
+
+            </ul>
+            <nav class="learn-press-pagination navigation pagination">
+                <ul class="page-numbers">
+                    <li><span aria-current="page" class="page-numbers current">1</span></li>
+                    <li><a class="page-numbers" href="#" bis_skin_checked="1">2</a></li>
+                    <li><a class="next page-numbers" href="#" bis_skin_checked="1"><i class="arrow_left"></i></a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+<!-- courses part end -->
