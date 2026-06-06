@@ -1,0 +1,179 @@
+<!-- blog details part here -->
+<section class="blog_page section_padding">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="single_blog_details">
+                    <div data-aos="fade-up" data-aos-duration="1000" class="blog_details_content">
+                        <img src="<%= post.image %>" alt="#" class="img-fluid">
+                        <h2><%= post.title %></h2>
+                        <%- post.content %>
+                    </div>
+                    
+                    <div data-aos="fade-up" data-aos-duration="2400" class="tag_share_list blog_page_single_item">
+                        <div class="post_tag d-flex align-items-center">
+                            <h4 class="tag-title">برچسب ها:</h4>
+                            <% if (post.tags && post.tags.length > 0) { %>
+                                <% post.tags.forEach(tag => { %>
+                                    <a href="#" class="btn_4"><%= tag %></a>
+                                <% }); %>
+                            <% } else { %>
+                                <a href="#" class="btn_4">عمومی</a>
+                            <% } %>
+                        </div>
+                        <div class="share_icon_list d-flex align-items-center">
+                            <h4>اشتراک گذاری:</h4>
+                            <a href="#"><i class="social_facebook"></i></a>
+                            <a href="#"><i class="social_twitter"></i></a>
+                            <a href="#"><i class="social_pinterest"></i></a>
+                            <a href="#"><i class="social_linkedin"></i></a>
+                        </div>
+                    </div>
+                    
+                    <div data-aos="fade-up" data-aos-duration="2800" class="single_review_part blog_page_single_item">
+                        <div class="comment_part">
+                            <h3>نظرات</h3>
+                            <div class="media">
+                                <img src="/assets/img/student.png" class="admin_img" alt="#">
+                                <div class="media-body">
+                                    <div class="admin_tittle">
+                                        <h5>گونتر ریش<span>الان</span></h5>
+                                    </div>
+                                    <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون</p>
+                                    <a href="#" class="reply_btn"><i class="arrow_back"></i>پاسخ</a>
+                                    <div class="media">
+                                        <img src="/assets/img/student.png" class="admin_img" alt="#">
+                                        <div class="media-body">
+                                            <div class="admin_tittle">
+                                                <h5>گونتر ریش<span>44 دقیقه پیش</span></h5>
+                                            </div>
+                                            <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون</p>
+                                            <a href="#" class="reply_btn"><i class="arrow_back"></i>پاسخ</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div data-aos="fade-up" data-aos-duration="3000" class="review_form blog_page_single_item">
+                        <h3>پاسخ دهید</h3>
+                        <form action="#">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form_single_item">
+                                        <input type="text" name="name" placeholder="نام">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form_single_item">
+                                        <input type="email" name="email" placeholder="ایمیل">
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="form_single_item">
+                                        <textarea name="comment" placeholder="متن نظر"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="#" class="btn_3">ارسال</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="blog_sidebar right-sidebar">
+                    <div data-aos="fade-up" data-aos-duration="1200" class="single_sidebar">
+                        <form action="#" class="search_form">
+                            <input type="text" name="search" placeholder="جستجو...">
+                            <i class="icon_search"></i>
+                        </form>
+                    </div>
+                    
+                    <div data-aos="fade-up" data-aos-duration="1400" class="single_sidebar">
+                        <h3>آخرین پست ها</h3>
+                        <div class="single_sidebar_post">
+                            <img src="/assets/img/category_post/post_1.png" alt="">
+                            <div class="sidebar_post_content">
+                                <h4><a href="/blog/post/1">چگونه در یک هفته در CSS استاد شوید.</a></h4>
+                                <p>شهریور 1400</p>
+                            </div>
+                        </div>
+                        <div class="single_sidebar_post">
+                            <img src="/assets/img/category_post/post_2.png" alt="">
+                            <div class="sidebar_post_content">
+                                <h4><a href="/blog/post/2">20 تم برتر وردپرس برای مشاغل محلی.</a></h4>
+                                <p>شهریور 1400</p>
+                            </div>
+                        </div>
+                        <div class="single_sidebar_post">
+                            <img src="/assets/img/category_post/post_3.png" alt="">
+                            <div class="sidebar_post_content">
+                                <h4><a href="/blog/post/3">دانش آموزان برای حل یک مشکل با یکدیگر همکاری می کنند.</a></h4>
+                                <p>شهریور 1400</p>
+                            </div>
+                        </div>
+                        <div class="single_sidebar_post">
+                            <img src="/assets/img/category_post/post_4.png" alt="">
+                            <div class="sidebar_post_content">
+                                <h4><a href="/blog/post/4">تحقیق در مورد فرآیند آموزش یادگیری.</a></h4>
+                                <p>شهریور 1400</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div data-aos="fade-up" data-aos-duration="1600" class="single_sidebar">
+                        <h3>دسته بندی</h3>
+                        <div class="category_list">
+                            <p><a href="#"><i class="arrow_carrot-left"></i>طراحی اپلیکیشن (4)</a></p>
+                            <p><a href="#"><i class="arrow_carrot-left"></i>طراحی لوگو (6)</a></p>
+                            <p><a href="#"><i class="arrow_carrot-left"></i>کسب و کار (10)</a></p>
+                            <p><a href="#"><i class="arrow_carrot-left"></i>فناوری اطلاعات و نرم افزار (14)</a></p>
+                            <p><a href="#"><i class="arrow_carrot-left"></i>برنامه نویسی (12)</a></p>
+                            <p><a href="#"><i class="arrow_carrot-left"></i>فن آوری (10)</a></p>
+                            <p><a href="#"><i class="arrow_carrot-left"></i>موسیقی (8)</a></p>
+                            <p><a href="#"><i class="arrow_carrot-left"></i>خلاقیت (9)</a></p>
+                        </div>
+                    </div>
+                    
+                    <div data-aos="fade-up" data-aos-duration="1800" class="single_sidebar">
+                        <h3>برچسب ها</h3>
+                        <div class="sidebar_tag_list">
+                            <a href="#" class="btn_4">تحصیلات</a>
+                            <a href="#" class="btn_4">طراحی وب سایت</a>
+                            <a href="#" class="btn_4">غذا</a>
+                            <a href="#" class="btn_4">سیستم خنک کننده</a>
+                            <a href="#" class="btn_4">شگفت انگیز</a>
+                            <a href="#" class="btn_4">نرم افزار</a>
+                            <a href="#" class="btn_4">لندینگ</a>
+                            <a href="#" class="btn_4">تمیز</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- blog details part end -->
+
+<!-- cta part here -->
+<section class="cta_part section_padding">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <div class="cta_part_iner">
+                    <h2>بهترین معلمان در هر رشته</h2>
+                    <p>ما می توانیم هر چیزی را به شما آموزش دهیم</p>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="cta_btn">
+                    <a href="/course-list" class="btn_3">شروع کنید</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="circle_shape_1"></div>
+    <div class="circle_shape_2"></div>
+</section>

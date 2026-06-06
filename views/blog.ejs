@@ -1,0 +1,72 @@
+<!-- breadcrumb part -->
+<section class="breadcrumb_part blog_grid_bg">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 ">
+                <div class="breadcrumb_iner">
+                    <h2>شبکه وبلاگ</h2>
+                    <div class="breadcrumb_iner_link">
+                        <a href="index.html">خانه</a>
+                        <i class="arrow_carrot-left"></i>
+                        <span>شبکه وبلاگ</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- breadcrumb part end -->
+
+<!-- blog grid part here -->
+<section class="blog_posts page_section_padding">
+    <div class="container">
+        <div class="row justify-content-center">
+            <% posts.forEach((post, index) => { %>
+                <div data-aos="fade-up" data-aos-duration="<%= 1200 + (index * 200) %>" class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+                    <div class="blog_post_list">
+                        <div class="single_page_blog_post">
+                            <img src="<%= post.image %>" alt="#" class="img-fluid">
+                            <div class="single_blog_content">
+                                <div class="post_author">
+                                    <p><%= post.date %><i class="icon_clock_alt"></i></p>
+                                    <p><%= post.author %><i class="icon_profile"></i></p>
+                                </div>
+                                <h2> <a href="/blog/post/<%= post.id %>"><%= post.title %></a> </h2>
+                                <p><%= post.excerpt.substring(0, 150) %>...</p>
+                                <a href="/blog/post/<%= post.id %>" class="read_more_btn">بیشتر <i class="arrow_left"></i> </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+        <div data-aos="fade-up" data-aos-duration="2400" class="page_pageination justify-content-start">
+            <a class="current" href="#">1</a>
+            <a href="#">2</a>
+            <a href="#"> <i class="arrow_left"></i></a>
+        </div>
+    </div>
+</section>
+<!-- blog grid part end -->
+
+<!-- cta part here -->
+<section class="cta_part section_padding">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <div class="cta_part_iner">
+                    <h2>بهترین معلمان در هر رشته</h2>
+                    <p>ما می توانیم هر چیزی را به شما آموزش دهیم</p>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="cta_btn">
+                    <a href="course-list.html" class="btn_3">شروع کنید</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="circle_shape_1"></div>
+    <div class="circle_shape_2"></div>
+</section>
+<!-- cta part end -->

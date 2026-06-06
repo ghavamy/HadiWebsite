@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zxx">
+<%- include('../partials/head') %>
+
+<body>
+    <!-- start Preloader  -->
+    <div class="preloder_part">
+        <div class="spinner">
+            <div class="dot1"></div>
+            <div class="dot2"></div>
+        </div>
+    </div>
+    <!-- End Preloader  -->
+
+    <!-- header part here -->
+    <%- include('../partials/header') %>
+    <!-- header part end -->
+
+    <!-- navigation bar -->
+    <%- include('../partials/navbar') %>
+
+    <!-- Main Content Area -->
+    <%- body %>
+
+    <!-- footer part here -->
+    <%- include('../partials/footer') %>
+    <!-- footer part end -->
+
+    <!-- Start LTR & RTL Button (commented) -->
+    <!-- <div class="ltr-rtl-button">
+        <a class="default-btn active ltr">
+            LTR
+        </a>
+        <a class="default-btn rtl">
+            RTL
+        </a>
+    </div> -->
+    <!-- End LTR & RTL Button -->
+
+    <!-- scripts -->
+    <%- include('../partials/scripts') %>
+</body>
+
+</html>
