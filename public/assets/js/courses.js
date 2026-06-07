@@ -188,9 +188,12 @@ const lpArchivePaginationCourse = () => {
 };
 
 const lpArchiveGridListCourse = () => {
-    const layout = LP.Cookies.get('courses-layout');
 
+    
     const switches = document.querySelectorAll('.lp-courses-bar .switch-layout [name="lp-switch-layout-btn"]');
+
+    // const layout = LP.Cookies.get('courses-layout');
+    const layout = localStorage.getItem('courses-layout') || 'grid';
 
     switches.length > 0 && [...switches].map((ele) => ele.value === layout && (ele.checked = true));
 };
@@ -207,7 +210,8 @@ const lpArchiveGridListCourseHandle = () => {
             const dataLayout = document.querySelector('.lp-archive-courses .learn-press-courses[data-layout]');
 
             dataLayout && (dataLayout.dataset.layout = layout);
-            LP.Cookies.set('courses-layout', layout);
+
+            localStorage.setItem('courses-layout', layout);
         }
     }));
 };

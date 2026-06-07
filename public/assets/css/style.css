@@ -7094,3 +7094,21 @@ html[dir="rtl"] .lp-archive-courses .course-summary {
 .popular_course {
     direction: rtl;
 }
+
+/* Default state */
+/* .section .fa-caret-up {
+    display: none;
+}
+
+.section .fa-caret-down {
+    display: inline-block;
+} */
+
+/* Open state */
+/* .section.active .fa-caret-up {
+    display: inline-block;
+}
+
+.section.active .fa-caret-down {
+    display: none;
+} */

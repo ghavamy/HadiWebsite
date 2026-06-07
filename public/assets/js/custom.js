@@ -357,4 +357,12 @@
     //     }
     // });
 
+    $('.section-toggle').on('click', function () {
+
+        const section = $(this).closest('.section');
+
+        section.toggleClass('closed');
+
+    });
+
 }(jQuery));
