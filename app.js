@@ -6,6 +6,11 @@ require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 3000;
 
+//routes
+const registerRoutes = require("./routes/register");
+const courseRoutes = require("./routes/course");
+const blogRoutes = require("./routes/blog");
+
 
 //Set EJS as the template engine
 app.set('view engine', 'ejs');
@@ -24,12 +29,10 @@ const expressLayouts = require('express-ejs-layouts');
 app.use(expressLayouts);
 app.set('layout', 'layouts/main.ejs');
 
+//modules for email and sms
+const nodemailer = require('nodemailer');
 
-// Helper function to load blog posts
-function getData() {
-    const data = fs.readFileSync(path.join(__dirname, 'data', 'data.json'), 'utf8');
-    return JSON.parse(data);
-}
+
 
 //ROUTES
 //static pages
@@ -50,114 +53,13 @@ pages.forEach(page => {
 });
 
 //dynamic pages
-app.get('/blog', (req, res) => {
-
-    const postsData = getData().posts;
-
-    res.render('blog', {
-            title : 'شبکه وبلاگ',
-            courseCss : false,
-            fontAwesome : false,
-            posts: postsData // taking all of the posts
-    })
-});
-
-// Individual blog post page (dynamic based on ID)
-app.get('/blog/post/:id', (req, res, next) => {
-    const data = getData();
-    const postId = parseInt(req.params.id);
-    const post = data.posts.find(p => p.id === postId);
-    
-    if (post) {
-        res.render('blog-detail', { 
-            title: post.title,
-            courseCss: false,
-            fontAwesome: false,
-            post  // Pass single post to template
-        });
-    } else {
-        req.notFoundMessage = "پست یافت نشد";
-        return next();
-    }
-});
-
-app.get('/course-grid', (req, res) => {
-
-    const coursesData = getData().courses;
-
-    res.render('course-grid', {
-            title : 'دوره های آموزشی',
-            courseCss : true,
-            fontAwesome : true,
-            courses: coursesData // taking all of the posts
-    });
-});
 
 
-app.get('/course/:slug', (req, res, next) => {
 
-    const data = getData();
+app.use("/blog", blogRoutes);
+app.use("/course", courseRoutes);
+app.use("/register", registerRoutes);
 
-    const course = data.courses.find(c => c.slug === req.params.slug);
-
-    if (course) {
-        res.render('course-detail', {
-            title: course.title,
-            courseCss: true,
-            fontAwesome: true,
-            course
-        });
-    } else {
-        req.notFoundMessage = 'دوره یافت نشد';
-        return next();
-    }
-});
-
-app.get('/course/:slug/lesson/:session', (req, res, next) => {
-
-    const data = getData();
-
-    const course = data.courses.find(
-        c => c.slug === req.params.slug
-    );    
-
-    if(course)
-    {
-        const sessionNumber = parseInt(req.params.session);
-    
-        let lesson = null;
-    
-        for (const section of course.sections) {
-            const found = section.lessons.find(
-                l => l.session === sessionNumber
-            );
-    
-            if (found) {
-                lesson = found;
-                break;
-            }
-        }
-
-        if(lesson)
-        {
-            res.render('lessons', {
-                title: lesson.title,
-                courseCss: true,
-                fontAwesome: true,
-                course,
-                lesson
-            });
-        }else
-        {
-            req.notFoundMessage = 'جلسه یافت نشد';
-            return next();
-        }
-    }else
-    {
-        req.notFoundMessage = 'دوره یافت نشد';
-        return next();
-    }
-});
 
 // Your existing static files still work!
 // Any file in 'public' folder is still served automatically
@@ -175,6 +77,7 @@ app.use((req, res) => {
         res.status(404).sendFile(path.join(__dirname, 'public', '404.html'));
     }
 });
+
 
 app.listen(port, () => {
     console.log(`✅ Server running at http://localhost:${port}`);

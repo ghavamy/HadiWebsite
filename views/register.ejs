@@ -1,0 +1,97 @@
+<div class="container section_padding">
+  <div class="auth-container">
+
+    <!-- TABS -->
+    <div class="auth-tabs">
+      <button class="tab-btn active"">
+        ثبت اطلاعات
+      </button>
+
+      <button class="tab-btn"">
+        ورود
+      </button>
+    </div>
+
+
+    <!-- REGISTER (MAIN FORM) -->
+    <div class="auth-form active" id="registerForm">
+
+      <h3>ثبت اطلاعات کاربر</h3>
+
+      <form action="/register" method="post">
+
+        <div class="form-group">
+          <label>نام و نام خانوادگی</label>
+          <input type="text" name="fullName" placeholder="نام و نام خانوادگی">
+        </div>
+
+        <div class="form-group">
+          <label>شماره تلفن</label>
+          <input type="tel" name="phone" placeholder="09123456789">
+        </div>
+
+        <div class="form-group">
+          <label>ایمیل</label>
+          <input type="email" name="email" placeholder="ایمیل">
+        </div>
+
+        <div class="form-group">
+          <label>نقش کاربر</label>
+          <select name="role" id="roleSelect">
+            <option value="">انتخاب کنید</option>
+            <option value="student">دانش‌آموز</option>
+            <option value="teacher">معلم</option>
+            <option value="consultant">مشاور</option>
+          </select>
+        </div>
+
+        <!-- STUDENT ONLY -->
+        <div id="studentFields" class="hidden">
+
+          <div class="form-group">
+            <label>پایه تحصیلی</label>
+            <input type="text" name="grade" placeholder="مثلاً نهم">
+          </div>
+
+          <div class="form-group">
+            <label>رشته تحصیلی</label>
+            <input type="text" name="field" placeholder="مثلاً تجربی">
+          </div>
+
+        </div>
+
+        <button class="auth-btn">
+          ارسال
+        </button>
+
+      </form>
+    </div>
+
+
+    <!-- LOGIN (OPTIONAL SECOND TAB) -->
+    <div class="auth-form" id="loginForm">
+
+      <h3>ورود</h3>
+
+      <form>
+
+        <div class="form-group">
+          <label>ایمیل یا نام کاربری</label>
+          <input type="text" name="grade" placeholder="ایمیل یا نام کاربری">
+        </div>
+
+        <div class="form-group">
+          <label>رمز عبور</label>
+          <input type="password" name="field" placeholder="رمز عبور">
+        </div>
+
+        <button class="auth-btn">
+          ورود
+        </button>
+
+      </form>
+
+    </div>
+
+  </div>
+</div>
