@@ -6,6 +6,8 @@ require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 3000;
 
+const sendSMS = require('./services/smsService');
+
 
 //Set EJS as the template engine
 app.set('view engine', 'ejs');
@@ -37,6 +39,7 @@ const pages = [
     { path: '/', view: 'index', title: 'خانه'},
     { path: '/about', view: 'about', title: 'درباره ما'},
     { path: '/contact', view: 'contact', title: 'تماس با ما'},
+    { path: '/register', view: 'register', title: 'ثبت نام', courseCss : true, fontAwesome : true}
 ];
 
 pages.forEach(page => {
@@ -127,7 +130,8 @@ app.get('/course/:slug/lesson/:session', (req, res, next) => {
     
         let lesson = null;
     
-        for (const section of course.sections) {
+        for (const section of course.sections) 
+        {
             const found = section.lessons.find(
                 l => l.session === sessionNumber
             );
