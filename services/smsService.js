@@ -1,23 +1,38 @@
-const axios = require('axios');
+import axios from "axios";
 
-async function sendSMS(student) {
+export async function sendSMS(data) {
 
-    const text =
-        `دانش آموز جدید:
-نام: ${student.fullName}
-موبایل: ${student.phone}
-پایه: ${student.grade}`;
+    const message =
+        `نام: ${data.fullName}
+        تلفن: ${data.phone}
+        ایمیل: ${data.email}
+        نقش: ${data.role}
+        پایه: ${data.grade || "-"}
+        رشته: ${data.field || "-"}`;
 
-    await axios.get(
-        `https://api.kavenegar.com/v1/${process.env.KAVENEGAR_API_KEY}/sms/send.json`,
+    console.log("sending SMS....");
+
+    const response = await axios.post(
+        "https://niksms.com/fa/publicapi/ptpSms",
+        new URLSearchParams({
+
+            username: process.env.NIKSMS_USERNAME,
+            password: process.env.NIKSMS_PASSWORD,
+
+            "GroupSmsModel.Message": message,
+            "GroupSmsModel.Numbers": process.env.ADMIN_PHONE,
+            "GroupSmsModel.SendType": "1",
+            "GroupSmsModel.SenderNumber": "",
+
+        }).toString(),
         {
-            params: {
-                receptor: process.env.ADMIN_PHONE,
-                message: text
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
             }
         }
     );
 
-}
+    console.log("response", response.data);
 
-module.exports = sendSMS;
+    return response.data;
+}

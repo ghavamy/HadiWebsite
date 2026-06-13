@@ -17,126 +17,120 @@
 </section>
 <!-- breadcrumb part end -->
 
-<!-- become a teacher part here -->
-<div id="primary" class="content-area section_padding">
-    <main id="main" class="site-main">
-        <div class="container">
-            <div class="learnpress">
-                <div id="learn-press-become-teacher-form" class="become-teacher-form learn-press-form">
-                    <form name="become-teacher-form" method="post" enctype="multipart/form-data" action="">
-                        <div class="learn-press-message success">
-                            <i class="fa"></i>لطفا <a href="my-profile.html">وارد شوید</a> برای ارسال درخواست
-                        </div>
-                    </form>
-                </div>
-            </div><br/>
-            <article id="post-47" class="post-47 page type-page status-publish hentry">
-                <div class="entry-content">
-                    <div class="learnpress">
-                        <div id="learn-press-profile" class="lp-user-profile guest">
-                            <div class="main-content-area row">
-                                <div class="learn-press-form-login learn-press-form">
-                                    <h3>وارد شوید</h3>
-                                    <form name="learn-press-login" method="post" action="">
-                                        <ul class="form-fields">
-                                            <li class="form-field">
-                                                <label for="username">نام کاربری یا ایمیل<span class="required">*</span></label>
-                                                <input type="text" name="username" id="username" placeholder="نام کاربری یا ایمیل" autocomplete="username">
-                                            </li>
-                                            <li class="form-field">
-                                                <label for="password">رمز عبور<span class="required">*</span></label>
-                                                <span class="lp-password-input"><input type="password" name="password" id="password" placeholder="رمز عبور" autocomplete="current-password"><span class="lp-show-password-input"></span></span>
-                                            </li>
-                                        </ul>
-                                        <p>
-                                            <label>
-                                                <input type="checkbox" name="rememberme">
-                                                مرا به خاطر بسپار
-                                            </label>
-                                        </p>
-                                        <p>
-                                            <input type="hidden" name="learn-press-login-nonce" value="f346c119af">
-                                            <button type="submit">وارد شوید</button>
-                                        </p>
-                                        <p>
-                                            <a href="#">رمز عبور خود را فراموش کرده اید؟</a>
-                                        </p>
-                                    </form>
-                                </div>
-                                <div class="learn-press-form-register learn-press-form">
-                                    <h3>ثبت نام</h3>
-                                    <form name="learn-press-register" method="post" action="/register">
-                                        <div class="row">
+<div class="container section_padding">
+  <div class="auth-container">
 
-                                            <div class="col-md-6 mb-4">
-                                                <label>نام و نام خانوادگی</label>
-                                                <input type="text" name="fullName" class="form-control" required>
-                                            </div>
+    <!-- TABS -->
+    <div class="auth-tabs">
+      <button class="tab-btn active"">
+        ثبت اطلاعات
+      </button>
 
-                                            <div class="col-md-6 mb-4">
-                                                <label>شماره موبایل</label>
-                                                <input type="tel" name="phone" class="form-control" required>
-                                            </div>
+      <button class="tab-btn"">
+        ورود
+      </button>
+    </div>
 
-                                            <div class="col-md-6 mb-4">
-                                                <label>پایه تحصیلی</label>
-                                                <select name="grade" class="form-control" required>
-                                                    <option value="">انتخاب کنید</option>
-                                                    <option>دهم</option>
-                                                    <option>یازدهم</option>
-                                                    <option>دوازدهم</option>
-                                                    <option>فارغ‌التحصیل</option>
-                                                </select>
-                                            </div>
 
-                                            <div class="col-md-6 mb-4">
-                                                <label>رشته تحصیلی</label>
-                                                <select name="major" class="form-control" required>
-                                                    <option value="">انتخاب کنید</option>
-                                                    <option>ریاضی فیزیک</option>
-                                                    <option>علوم تجربی</option>
-                                                    <option>علوم انسانی</option>
-                                                    <option>هنر</option>
-                                                    <option>فنی و حرفه‌ای</option>
-                                                    <option>کاردانش</option>
-                                                </select>
-                                            </div>
+    <!-- REGISTER (MAIN FORM) -->
+    <div class="auth-form active" id="registerForm">
 
-                                            <div class="col-md-6 mb-4">
-                                                <label>شهر محل سکونت</label>
-                                                <input type="text" name="city" class="form-control" required>
-                                            </div>
+      <h3>ثبت اطلاعات کاربر</h3>
 
-                                            <div class="col-md-6 mb-4">
-                                                <label>نام مدرسه (اختیاری)</label>
-                                                <input type="text" name="school" class="form-control">
-                                            </div>
+      <form action="/register" method="post">
 
-                                            <div class="col-12 mb-4">
-                                                <label>توضیحات یا سوالات</label>
-                                                <textarea name="message"
-                                                        rows="5"
-                                                        class="form-control"
-                                                        placeholder="اگر سوال یا توضیحی دارید اینجا بنویسید..."></textarea>
-                                            </div>
-
-                                            <div class="col-12 text-center">
-                                                <button type="submit" class="btn btn-primary btn-lg">
-                                                    ارسال اطلاعات
-                                                </button>
-                                            </div>
-
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- .entry-content -->
-            </article>
+        <div class="form-group">
+          <label>نام و نام خانوادگی</label>
+          <input type="text" name="fullName" placeholder="نام و نام خانوادگی">
         </div>
-    </main>
-    <!-- #main -->
+
+        <div class="form-group">
+          <label>شماره تلفن</label>
+          <input type="tel" name="phone" placeholder="09123456789">
+        </div>
+
+        <div class="form-group">
+          <label>ایمیل</label>
+          <input type="email" name="email" placeholder="ایمیل">
+        </div>
+
+        <div class="form-group">
+            <label>رمز عبور</label>
+            <input
+                type="password"
+                name="password"
+                placeholder="رمز عبور"
+                required
+            >
+        </div>
+
+        <div class="form-group">
+            <label>تکرار رمز عبور</label>
+            <input
+                type="password"
+                name="confirmPassword"
+                placeholder="تکرار رمز عبور"
+                required
+            >
+        </div>
+
+        <div class="form-group">
+          <label>نقش کاربر</label>
+          <select name="role" id="roleSelect">
+            <option value="">انتخاب کنید</option>
+            <option value="student">دانش‌آموز</option>
+            <option value="teacher">معلم</option>
+            <option value="consultant">مشاور</option>
+          </select>
+        </div>
+
+        <!-- STUDENT ONLY -->
+        <div id="studentFields" class="hidden">
+
+          <div class="form-group">
+            <label>پایه تحصیلی</label>
+            <input type="text" name="grade" placeholder="مثلاً نهم">
+          </div>
+
+          <div class="form-group">
+            <label>رشته تحصیلی</label>
+            <input type="text" name="field" placeholder="مثلاً تجربی">
+          </div>
+
+        </div>
+
+        <button class="auth-btn">
+          ارسال
+        </button>
+
+      </form>
+    </div>
+
+
+    <!-- LOGIN (OPTIONAL SECOND TAB) -->
+    <div class="auth-form" id="loginForm">
+
+      <h3>ورود</h3>
+
+      <form action="/register/login" method="post">
+
+        <div class="form-group">
+          <label>ایمیل یا نام کاربری</label>
+          <input type="text" name="email" placeholder="ایمیل یا نام کاربری">
+        </div>
+
+        <div class="form-group">
+          <label>رمز عبور</label>
+          <input type="password" name="password" placeholder="رمز عبور">
+        </div>
+
+        <button class="auth-btn">
+          ورود
+        </button>
+
+      </form>
+
+    </div>
+
+  </div>
 </div>
-<!-- become a teacher part end -->

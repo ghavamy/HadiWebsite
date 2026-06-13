@@ -10,7 +10,23 @@
                 </div>
                 <div class="col-xl-6 col-lg-5 col-md-5">
                     <div class="header_login_info">
-                        <a href="teacher.html">استاد شوید</a>
+                        <% if(user) { %>
+                            
+                            <span>
+                                <%= user.fullName %>
+                            </span>
+
+                            <a href="/register/logout" class="btn_1">
+                                خروج
+                            </a>
+
+                        <% } else { %>
+
+                            <a href="/register" class="btn_1">
+                                ورود / ثبت نام
+                            </a>
+
+                        <% } %>
                         <a href="my-profile.html">پنل کاربری</a>
                     </div>
                 </div>

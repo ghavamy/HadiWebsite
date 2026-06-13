@@ -365,4 +365,32 @@
 
     });
 
+     // ===== TAB SWITCHING =====
+    $(".tab-btn").on("click", function () {
+
+        let index = $(this).index();
+
+        // active tab button
+        $(".tab-btn").removeClass("active");
+        $(this).addClass("active");
+
+        // show correct form
+        $(".auth-form").removeClass("active");
+        $(".auth-form").eq(index).addClass("active");
+    });
+
+
+    // ===== ROLE LOGIC =====
+    $("#roleSelect").on("change", function () {
+
+        let value = $(this).val();
+
+        if (value === "student") {
+        $("#studentFields").slideDown(200);
+        } else {
+        $("#studentFields").slideUp(200);
+        }
+
+    });
+
 }(jQuery));
