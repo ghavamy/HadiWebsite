@@ -10,24 +10,13 @@
                 </div>
                 <div class="col-xl-6 col-lg-5 col-md-5">
                     <div class="header_login_info">
-                        <% if(user) { %>
-                            
-                            <span>
-                                <%= user.fullName %>
-                            </span>
-
-                            <a href="/register/logout" class="btn_1">
-                                خروج
-                            </a>
-
+                        <% if(user) { %>                                                        
+                            <a href="/profile">پنل کاربری (<%= user.fullName %>)</a>
+                            <a href="/register/logout" style="color: crimson;">خروج</a>                            
                         <% } else { %>
-
-                            <a href="/register" class="btn_1">
-                                ورود / ثبت نام
-                            </a>
-
+                            <a href="/register" style="color: seagreen;">ورود / ثبت نام</a>
+                            <a href="">خوش آمدید...!</a>
                         <% } %>
-                        <a href="my-profile.html">پنل کاربری</a>
                     </div>
                 </div>
             </div>

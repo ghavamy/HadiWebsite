@@ -13,8 +13,6 @@ import expressLayouts from 'express-ejs-layouts';
 import session from "express-session";
 
 
-
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -60,10 +58,14 @@ app.use((req, res, next) => {
 //ROUTES
 //static pages
 const pages = [
-    { path: '/', view: 'index', title: 'خانه'},
-    { path: '/about', view: 'about', title: 'درباره ما'},
-    { path: '/contact', view: 'contact', title: 'تماس با ما'},
-    { path: '/register', view: 'register', title: 'ثبت نام', courseCss : true, fontAwesome : true}
+    { path: '/',         view: 'index',    title: 'خانه'},
+    { path: '/about',    view: 'about',    title: 'درباره ما'},
+    { path: '/contact',  view: 'contact',  title: 'تماس با ما'},
+    { path: '/about',    view: 'about',    title: 'درباره ما'},
+    { path: '/register', view: 'register', title: 'ثبت نام',    courseCss : true, fontAwesome : true},
+    { path: '/profile',  view: 'profile',  title: 'پنل کاربری', courseCss : true, fontAwesome : true},
+    { path: '/checkout', view: 'checkout', title: 'خرید' ,      courseCss : true, fontAwesome : true},
+    { path: '/quizzes',  view: 'quizzes',  title: 'آزمون' ,     courseCss : true, fontAwesome : true},
 ];
 
 pages.forEach(page => {

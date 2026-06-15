@@ -209,7 +209,7 @@
     //time countdown
     $(document).ready(function() {
         function coursesTimer() {
-            var endTime = new Date("30 November 2024 11:26:00 GMT+01:00");
+            var endTime = new Date("20 August 2026 11:26:00 GMT+03:30");
             endTime = (Date.parse(endTime) / 1000);
             var now = new Date();
             now = (Date.parse(now) / 1000);

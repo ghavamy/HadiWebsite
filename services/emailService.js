@@ -1,8 +1,5 @@
 import nodemailer from "nodemailer";
 
-console.log("EMAIL SERVICE LOADED");
-console.log("EMAIL_USER:", process.env.EMAIL_USER);
-
 const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -46,7 +43,7 @@ export async function sendEmail(data)
 export async function sendWelcomeEmail(data)
 {
     return transporter.sendMail({
-        from: process.env.EMAIL_USER,
+        from: `" آموزشگاه پلی نو" <${process.env.EMAIL_USER}>`,
         to: data.email,
 
         subject: "ثبت نام شما با موفقیت انجام شد",
@@ -59,7 +56,7 @@ export async function sendWelcomeEmail(data)
             </p>
 
             <p>
-                به جمع دانش‌آموزان ما خوش آمدید 🌹
+                به جمع دانش‌آموزان پلی نو خوش آمدید 🌹
             </p>
         `
     });
