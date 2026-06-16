@@ -58,14 +58,17 @@ app.use((req, res, next) => {
 //ROUTES
 //static pages
 const pages = [
-    { path: '/',         view: 'index',    title: 'خانه'},
-    { path: '/about',    view: 'about',    title: 'درباره ما'},
-    { path: '/contact',  view: 'contact',  title: 'تماس با ما'},
-    { path: '/about',    view: 'about',    title: 'درباره ما'},
-    { path: '/register', view: 'register', title: 'ثبت نام',    courseCss : true, fontAwesome : true},
-    { path: '/profile',  view: 'profile',  title: 'پنل کاربری', courseCss : true, fontAwesome : true},
-    { path: '/checkout', view: 'checkout', title: 'خرید' ,      courseCss : true, fontAwesome : true},
-    { path: '/quizzes',  view: 'quizzes',  title: 'آزمون' ,     courseCss : true, fontAwesome : true},
+    { path: '/',              view: 'index',         title: 'خانه'},
+    { path: '/about',         view: 'about',         title: 'درباره ما'},
+    { path: '/contact',       view: 'contact',       title: 'تماس با ما'},
+    { path: '/event',         view: 'event',         title: 'رویداد ها'},
+    { path: '/instructor',    view: 'instructor',    title: 'آموزگار'},
+    { path: '/testimonial',   view: 'testimonial',   title: 'گواهینامه'},
+    { path: '/live-class',    view: 'live-class',    title: 'وبینار'},
+    { path: '/register',      view: 'register',      title: 'ثبت نام',     courseCss : true, fontAwesome : true},
+    { path: '/profile',       view: 'profile',       title: 'پنل کاربری',  courseCss : true, fontAwesome : true},
+    { path: '/checkout',      view: 'checkout',      title: 'خرید' ,       courseCss : true, fontAwesome : true},
+    { path: '/quizzes',       view: 'quizzes',       title: 'آزمون' ,      courseCss : true, fontAwesome : true},
 ];
 
 pages.forEach(page => {
