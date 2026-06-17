@@ -93,34 +93,15 @@
                     
                     <div data-aos="fade-up" data-aos-duration="1400" class="single_sidebar">
                         <h3>آخرین پست ها</h3>
-                        <div class="single_sidebar_post">
-                            <img src="/assets/img/category_post/post_1.png" alt="">
-                            <div class="sidebar_post_content">
-                                <h4><a href="/blog/post/1">چگونه در یک هفته در CSS استاد شوید.</a></h4>
-                                <p>شهریور 1400</p>
+                        <% recentPosts.forEach(recent => { %>
+                            <div class="single_sidebar_post">
+                                <img src="<%= recent.image %>" alt="<%= recent.title %>">
+                                <div class="sidebar_post_content">
+                                    <h4><a href="/blog/<%= recent.id %>"><%= recent.title %></a></h4>
+                                    <p><%= recent.date %></p>
+                                </div>
                             </div>
-                        </div>
-                        <div class="single_sidebar_post">
-                            <img src="/assets/img/category_post/post_2.png" alt="">
-                            <div class="sidebar_post_content">
-                                <h4><a href="/blog/post/2">20 تم برتر وردپرس برای مشاغل محلی.</a></h4>
-                                <p>شهریور 1400</p>
-                            </div>
-                        </div>
-                        <div class="single_sidebar_post">
-                            <img src="/assets/img/category_post/post_3.png" alt="">
-                            <div class="sidebar_post_content">
-                                <h4><a href="/blog/post/3">دانش آموزان برای حل یک مشکل با یکدیگر همکاری می کنند.</a></h4>
-                                <p>شهریور 1400</p>
-                            </div>
-                        </div>
-                        <div class="single_sidebar_post">
-                            <img src="/assets/img/category_post/post_4.png" alt="">
-                            <div class="sidebar_post_content">
-                                <h4><a href="/blog/post/4">تحقیق در مورد فرآیند آموزش یادگیری.</a></h4>
-                                <p>شهریور 1400</p>
-                            </div>
-                        </div>
+                        <% }) %>
                     </div>
                     
                     <div data-aos="fade-up" data-aos-duration="1600" class="single_sidebar">

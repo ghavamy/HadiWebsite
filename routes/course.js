@@ -1,7 +1,7 @@
 import { Router } from "express";
 const router = Router();
 
-import { getData } from "../services/data.js";
+import { getData } from "../services/readData.js";
 
 router.get('/course-grid', (req, res) => {
 
