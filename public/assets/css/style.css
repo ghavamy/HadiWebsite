@@ -6557,12 +6557,6 @@ input[type="password"] {
         content: "3";
         font-family: "eleganticons";
         left: 0;
-
-        display: inline-block;
-        transition: transform .3s ease;
-    }
-    .mega_menu_dropdown a.mega_menu_dropdown-toggle.nav-link.mega_menu_icon:after {
-        transform: rotate(180deg);
     }
     .mega_menu_dropdown .mega_menu_dropdown a.mega_menu_dropdown-toggle.nav-link:after {
         right: 15px;
@@ -6596,6 +6590,9 @@ input[type="password"] {
 }
 
 @media (max-width: 768px) {
+    .mega_menu_dropdown a.mega_menu_dropdown-toggle.nav-link.mega_menu_icon:after {
+        transform: rotate(180deg);
+    }
     .sidebar_icon.troggle_icon.d-lg-none {
         margin-left: 12px;
         position: relative;

@@ -1,8 +1,9 @@
 import "dotenv/config";
 
 import express from 'express';
-import { join , dirname} from 'path';
+import path, { join , dirname} from 'path';
 import { fileURLToPath } from 'url';
+import { getData } from "./services/readData.js";
 import fs from 'fs';
 //routes
 import registerRoutes from "./routes/register.js";
@@ -11,6 +12,7 @@ import blogRoutes from "./routes/blog.js";
 
 import expressLayouts from 'express-ejs-layouts';
 import session from "express-session";
+import { title } from "process";
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -58,11 +60,11 @@ app.use((req, res, next) => {
 //ROUTES
 //static pages
 const pages = [
-    { path: '/',              view: 'index',         title: 'خانه'},
+    { path: '/',              view: 'index',         title: 'خانه',     courses: getData().courses,  instructors: getData().instructors },
     { path: '/about',         view: 'about',         title: 'درباره ما'},
     { path: '/contact',       view: 'contact',       title: 'تماس با ما'},
     { path: '/event',         view: 'event',         title: 'رویداد ها'},
-    { path: '/instructor',    view: 'instructor',    title: 'آموزگار'},
+    { path: '/instructor',    view: 'instructor',    title: 'آموزگار',  instructors: getData().instructors},
     { path: '/testimonial',   view: 'testimonial',   title: 'گواهینامه'},
     { path: '/live-class',    view: 'live-class',    title: 'وبینار'},
     { path: '/register',      view: 'register',      title: 'ثبت نام',     courseCss : true, fontAwesome : true},
@@ -73,11 +75,17 @@ const pages = [
 
 pages.forEach(page => {
     app.get(page.path, (req, res) => {
-        res.render(page.view, { 
-            title : page.title || 'وبلاگ آموزشی',
-            courseCss : page.courseCss || false,
-            fontAwesome : page.fontAwesome || false,
-        });
+
+        // Create a copy of page object and remove 'path' and 'view'
+        const { path, view, ...renderData } = page;
+
+        // Set defaults for missing properties
+        renderData.title = renderData.title || 'وبلاگ آموزشی';
+        renderData.courseCss = renderData.courseCss || false;
+        renderData.fontAwesome = renderData.fontAwesome || false;
+        
+        // Pass all remaining properties to render
+        res.render(view, renderData);
     });
 });
 

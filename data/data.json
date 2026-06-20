@@ -74,7 +74,7 @@
       "title": "هوش و استعداد تحلیلی فرهنگیان",
       "category": "فرهنگیان",
       "instructor": "هوش و استعداد تحلیلی",
-      "teacher": "هادی",
+      "teacher": "کاوه قوامی خطیب",
       "teacherImage": "/assets/img/author_5.jpg",
       "image": "/assets/img/course/هوش و استعداد تحلیلی فرهنگیان.png",
       "price": "120000",
@@ -186,6 +186,19 @@
       "price": "160 هزار تومان",
       "image": "/assets/img/course/معرفی رشته ها دانشگاهی.png",
       "excerpt": "توضیحات کوتاه دوره..."
+    }
+  ],
+
+  "instructors" : [
+    {
+        "img": "/assets/img/instructors/هادی فلاح.jpg",
+        "name": "هادی فلاح",
+        "role": "مدیر موسسه"
+    },
+    {
+        "img": "/assets/img/instructors/محمد فرهنگیان.jpg",
+        "name": "محمد فرهنگیان",
+        "role": "معاون آموزشی"
     }
   ]
 }

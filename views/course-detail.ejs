@@ -5,9 +5,9 @@
             <li class="breadcrumb-delimiter"><i class="fas fa-chevron-left"></i></li>
             <li><a href="/course/course-grid" bis_skin_checked="1"><span>همه دوره ها</span></a></li>
             <li class="breadcrumb-delimiter"><i class="fas fa-chevron-left"></i></li>
-            <li><span>علوم کامپیوتر</span></li>
+            <li><span><%= course.category %></span></li>
             <li class="breadcrumb-delimiter"><i class="fas fa-chevron-left"></i></li>
-            <li><span>توسعه نرم افزار</span></li>
+            <li><span><%= course.title %></span></li>
         </ul>
         <div id="learn-press-course" class="course-summary" bis_skin_checked="1">
             <div class="course-content course-summary-content" bis_skin_checked="1">
@@ -23,7 +23,7 @@
                                         <div class="meta-item__value" bis_skin_checked="1">
                                             <label>استاد</label>
                                             <div bis_skin_checked="1">
-                                                <a href="my-profile.html" bis_skin_checked="1"><span>آدام اسمیت</span></a>
+                                                <a href="/profile" bis_skin_checked="1"><span><%= course.teacher %></span></a>
                                             </div>
                                         </div>
                                     </div>
@@ -31,13 +31,13 @@
                                         <div class="meta-item__value" bis_skin_checked="1">
                                             <label>دسته بندی</label>
                                             <div bis_skin_checked="1">
-                                                <a href="course-category.html" rel="tag" bis_skin_checked="1">علوم کامپیوتر</a>
+                                                <a href="course-category.html" rel="tag" bis_skin_checked="1"><%= course.category %></a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <h1 class="course-title">علوم کامپیوتر</h1>
+                            <h1 class="course-title"><%= course.title %></h1>
                             <div class="course-meta course-meta-secondary" bis_skin_checked="1">
                                 <div class="course-meta__pull-left" bis_skin_checked="1">
                                     <div class="meta-item meta-item-duration" bis_skin_checked="1">10 هفته</div>
@@ -178,10 +178,10 @@
                                     <div class="course-author" bis_skin_checked="1">
                                         <div class="lp-course-author" bis_skin_checked="1">
                                             <div class="course-author__pull-left" bis_skin_checked="1">
-                                                <img alt="User Avatar" src="/assets/img/author_5.jpg" srcset="/assets/img/author_5.jpg" class="avatar avatar-96 photo" height="250" width="250" loading="lazy">
+                                                <img alt="User Avatar" src="<%= course.teacherImage %>" srcset="/assets/img/author_5.jpg" class="avatar avatar-96 photo" height="250" width="250" loading="lazy">
                                             </div>
                                             <div class="course-author__pull-right" bis_skin_checked="1">
-                                                <div class="author-title" bis_skin_checked="1"><a href="my-profile.html" bis_skin_checked="1"><span>آدام اسمیت</span></a>
+                                                <div class="author-title" bis_skin_checked="1"><a href="/profile" bis_skin_checked="1"><span><%= course.teacher %></span></a>
                                                 </div>
                                                 <div class="author-description margin-bottom" bis_skin_checked="1">
                                                 </div>
@@ -190,54 +190,19 @@
                                     </div>
                                 </div>
                                 <div class="course-tab-panel-faqs course-tab-panel" id="tab-faqs" bis_skin_checked="1">
-                                    <input type="checkbox" name="course-faqs-box-ratio" id="course-faqs-box-ratio-6150b1eb67f33">
-                                    <div class="course-faqs-box" bis_skin_checked="1">
-                                        <label class="course-faqs-box__title" for="course-faqs-box-ratio-6150b1eb67f33">
-                                            لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است
-                                        </label>
-                                        <div class="course-faqs-box__content" bis_skin_checked="1">
-                                            <div class="course-faqs-box__content-inner" bis_skin_checked="1">
-                                                <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است</p>
-                                                <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است</p>
+                                    <% course.faqs.forEach((faq, index) => { %>
+                                        <input type="checkbox" name="course-faqs-box-ratio" id="faq-<%= course.slug %>-<%= index %>">
+                                        <div class="course-faqs-box" bis_skin_checked="1">
+                                            <label class="course-faqs-box__title" for="faq-<%= course.slug %>-<%= index %>">
+                                                <%= faq.question %>
+                                            </label>
+                                            <div class="course-faqs-box__content" bis_skin_checked="1">
+                                                <div class="course-faqs-box__content-inner" bis_skin_checked="1">
+                                                    <p> <%= faq.answer %> </p>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <input type="checkbox" name="course-faqs-box-ratio" id="course-faqs-box-ratio-6150b1eb67f6b">
-                                    <div class="course-faqs-box" bis_skin_checked="1">
-                                        <label class="course-faqs-box__title" for="course-faqs-box-ratio-6150b1eb67f6b">
-                                            لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است
-                                        </label>
-                                        <div class="course-faqs-box__content" bis_skin_checked="1">
-                                            <div class="course-faqs-box__content-inner" bis_skin_checked="1">
-                                                <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است</p>
-                                                <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <input type="checkbox" name="course-faqs-box-ratio" id="course-faqs-box-ratio-6150b1eb67faa">
-                                    <div class="course-faqs-box" bis_skin_checked="1">
-                                        <label class="course-faqs-box__title" for="course-faqs-box-ratio-6150b1eb67faa">
-                                            لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است
-                                        </label>
-                                        <div class="course-faqs-box__content" bis_skin_checked="1">
-                                            <div class="course-faqs-box__content-inner" bis_skin_checked="1">
-                                                <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است</p>
-                                                <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <input type="checkbox" name="course-faqs-box-ratio" id="course-faqs-box-ratio-6150b1eb67fd5">
-                                    <div class="course-faqs-box" bis_skin_checked="1">
-                                        <label class="course-faqs-box__title" for="course-faqs-box-ratio-6150b1eb67fd5">
-                                            لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است
-                                        </label>
-                                        <div class="course-faqs-box__content" bis_skin_checked="1">
-                                            <div class="course-faqs-box__content-inner" bis_skin_checked="1">
-                                                <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است</p>
-                                                <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است</p>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <% }) %>
                                 </div>
                             </div>
                         </div>
@@ -248,13 +213,13 @@
                             <div class="course-sidebar-top" bis_skin_checked="1">
                                 <div class="course-sidebar-preview" bis_skin_checked="1">
                                     <div class="media-preview" bis_skin_checked="1">
-                                        <img width="370" height="280" src="/assets/img/popular_item_2.png" class="attachment-500x300 size-500x300 wp-post-image" alt="Software Development" loading="lazy" title="Software Development">
+                                        <img width="370" height="280" src="<%= course.image %>" class="attachment-500x300 size-500x300 wp-post-image" alt="Software Development" loading="lazy" title="Software Development">
                                     </div>
                                     <div class="course-price" bis_skin_checked="1">
                                         <span class="price">120هزارتومان</span>
                                     </div>
                                     <div class="lp-course-buttons" bis_skin_checked="1">
-                                        <a href="checkout.html">
+                                        <a href="/checkout">
                                             <button class="lp-button button button-purchase-course">
                                                 خرید
                                             </button>
