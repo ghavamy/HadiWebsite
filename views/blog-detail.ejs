@@ -1,3 +1,9 @@
+<% if (messages && messages.error) { %>
+    <div class="alert alert-danger"><%= messages.error %></div>
+<% } %>
+<% if (messages && messages.success) { %>
+    <div class="alert alert-success"><%= messages.success %></div>
+<% } %>
 <!-- blog details part here -->
 <section class="blog_page section_padding">
     <div class="container">
@@ -30,59 +36,102 @@
                         </div>
                     </div>
                     
+                    <!-- Comments Section -->
                     <div data-aos="fade-up" data-aos-duration="2800" class="single_review_part blog_page_single_item">
                         <div class="comment_part">
-                            <h3>نظرات</h3>
-                            <div class="media">
-                                <img src="/assets/img/student.png" class="admin_img" alt="#">
-                                <div class="media-body">
-                                    <div class="admin_tittle">
-                                        <h5>گونتر ریش<span>الان</span></h5>
-                                    </div>
-                                    <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون</p>
-                                    <a href="#" class="reply_btn"><i class="arrow_back"></i>پاسخ</a>
-                                    <div class="media">
-                                        <img src="/assets/img/student.png" class="admin_img" alt="#">
+                            <h3>نظرات (<%= comments ? comments.length : 0 %>)</h3>
+                            
+                            <% if (comments && comments.length > 0) { %>
+                                <% comments.forEach(comment => { %>
+                                    <div class="media" id="comment-<%= comment.id %>">
+                                        <img src="<%= comment.avatar || '/assets/img/student.png' %>" class="admin_img" alt="#">
                                         <div class="media-body">
                                             <div class="admin_tittle">
-                                                <h5>گونتر ریش<span>44 دقیقه پیش</span></h5>
+                                                <h5><%= comment.name %> <span><%= timeAgo(comment.createdAt) %></span></h5>
                                             </div>
-                                            <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون</p>
-                                            <a href="#" class="reply_btn"><i class="arrow_back"></i>پاسخ</a>
+                                            <p><%= comment.content %></p>
+                                            <button type="button"  class="reply_btn" onclick="showReplyForm('<%= comment.id %>')">
+                                                <i class="arrow_back"></i>پاسخ
+                                            </button>
+                                            
+                                            <!-- Reply Form (hidden by default) -->
+                                            <div id="reply-form-<%= comment.id %>" class="reply_form" style="display: none; margin-top: 20px;">
+                                                <form action="/blog/post/<%= post.id %>/comment" method="POST">
+                                                    <input type="hidden" name="parentId" value="<%= comment.id %>">
+                                                    <div class="row">
+                                                        <div class="col-lg-6">
+                                                            <div class="form_single_item">
+                                                                <input type="text" name="name" placeholder="نام شما" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <div class="form_single_item">
+                                                                <input type="email" name="email" placeholder="ایمیل شما" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-12">
+                                                            <div class="form_single_item">
+                                                                <textarea name="content" placeholder="پاسخ شما" required></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <button type="submit" class="btn_3">ارسال پاسخ</button>
+                                                    <button type="button" class="btn_4" onclick="hideReplyForm('<%= comment.id %>')">انصراف</button>
+                                                </form>
+                                            </div>
+                                            
+                                            <!-- Replies -->
+                                            <% if (comment.replies && comment.replies.length > 0) { %>
+                                                <% comment.replies.forEach(reply => { %>
+                                                    <div class="media" style="margin-right: 50px;">
+                                                        <img src="<%= reply.avatar || '/assets/img/student.png' %>" class="admin_img" alt="#">
+                                                        <div class="media-body">
+                                                            <div class="admin_tittle">
+                                                                <h5><%= reply.name %> <span><%= timeAgo(reply.createdAt) %></span></h5>
+                                                            </div>
+                                                            <p><%= reply.content %></p>
+                                                        </div>
+                                                    </div>
+                                                <% }) %>
+                                            <% } %>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
+                                <% }) %>
+                            <% } else { %>
+                                <p style="color: #666; padding: 20px 0;">هنوز نظری ثبت نشده است. اولین نفر باشید!</p>
+                            <% } %>
                         </div>
                     </div>
                     
-                    <div data-aos="fade-up" data-aos-duration="3000" class="review_form blog_page_single_item">
-                        <h3>پاسخ دهید</h3>
-                        <form action="#">
+                    <!-- Main Comment Form -->
+                    <div id="review" data-aos="fade-up" data-aos-duration="3000" class="review_form blog_page_single_item">
+                        <h3>نظر خود را بنویسید</h3>
+                        <form action="/blog/post/<%= post.id %>/comment" method="POST">
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="form_single_item">
-                                        <input type="text" name="name" placeholder="نام">
+                                        <input type="text" name="name" placeholder="نام شما" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form_single_item">
-                                        <input type="email" name="email" placeholder="ایمیل">
+                                        <input type="email" name="email" placeholder="ایمیل شما" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="form_single_item">
-                                        <textarea name="comment" placeholder="متن نظر"></textarea>
+                                        <textarea name="content" placeholder="متن نظر" required></textarea>
                                     </div>
                                 </div>
                             </div>
-                            <a href="#" class="btn_3">ارسال</a>
+                            <button type="submit" class="btn_3">ارسال نظر</button>
                         </form>
                     </div>
                 </div>
             </div>
             
             <div class="col-lg-4">
+                <!-- Sidebar (unchanged) -->
                 <div class="blog_sidebar right-sidebar">
                     <div data-aos="fade-up" data-aos-duration="1200" class="single_sidebar">
                         <form action="#" class="search_form">
@@ -97,7 +146,7 @@
                             <div class="single_sidebar_post">
                                 <img src="<%= recent.image %>" alt="<%= recent.title %>">
                                 <div class="sidebar_post_content">
-                                    <h4><a href="/blog/<%= recent.id %>"><%= recent.title %></a></h4>
+                                    <h4><a href="/blog/post/<%= recent.id %>"><%= recent.title %></a></h4>
                                     <p><%= recent.date %></p>
                                 </div>
                             </div>
@@ -136,7 +185,24 @@
         </div>
     </div>
 </section>
-<!-- blog details part end -->
+
+<!-- JavaScript for Reply Form Toggle -->
+<script>
+    function showReplyForm(commentId) {
+        const form = document.getElementById('reply-form-' + commentId);
+        if (form) {
+            form.style.display = 'block';
+            // form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }
+    
+    function hideReplyForm(commentId) {
+        const form = document.getElementById('reply-form-' + commentId);
+        if (form) {
+            form.style.display = 'none';
+        }
+    }
+</script>
 
 <!-- cta part here -->
 <section class="cta_part section_padding">

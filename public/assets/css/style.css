@@ -7200,3 +7200,203 @@ html[dir="rtl"] .lp-archive-courses .course-summary {
 .hidden {
   display: none;
 }
+
+.single_contact_info {
+    background: #fff;
+    padding: 40px 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 30px rgba(0,0,0,0.08);
+    text-align: center;
+    margin-bottom: 30px;
+    transition: all 0.3s ease;
+}
+.single_contact_info:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+}
+.contact_icon {
+    width: 70px;
+    height: 70px;
+    line-height: 70px;
+    border-radius: 50%;
+    background: #f0f4ff;
+    color: #4a6cf7;
+    font-size: 28px;
+    margin: 0 auto 20px;
+}
+.contact_text h4 {
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: #1a1a2e;
+}
+.contact_text p {
+    margin-bottom: 5px;
+    color: #555;
+}
+.contact_text a {
+    color: #555;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+.contact_text a:hover {
+    color: #4a6cf7;
+}
+.social_media_section {
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 30px rgba(0,0,0,0.08);
+    text-align: center;
+}
+.social_title {
+    font-size: 20px;
+    margin-bottom: 25px;
+    color: #1a1a2e;
+}
+.social_media_icons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+}
+.social_link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 25px;
+    border-radius: 50px;
+    color: #fff;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+.social_link:hover {
+    transform: scale(1.05);
+    color: #fff;
+}
+.social_link.instagram { background: #E1306C; }
+.social_link.telegram { background: #0088cc; }
+.social_link.whatsapp { background: #25D366; }
+.social_link.twitter { background: #1DA1F2; }
+.social_link.linkedin { background: #0A66C2; }
+.social_link.youtube { background: #FF0000; }
+
+.working_hours {
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 30px rgba(0,0,0,0.08);
+    text-align: center;
+}
+.working_hours h4 {
+    margin-bottom: 20px;
+    color: #1a1a2e;
+}
+.working_hours h4 i {
+    color: #4a6cf7;
+    margin-left: 10px;
+}
+.hour_item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+.hour_item:last-child {
+    border-bottom: none;
+}
+.contact_title {
+    font-size: 32px;
+    margin-bottom: 15px;
+    color: #1a1a2e;
+}
+.contact_subtitle {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 40px;
+}
+/* Add to your style.css */
+.reply_form {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 15px;
+}
+
+.reply_form .form_single_item {
+    margin-bottom: 15px;
+}
+
+.reply_form input,
+.reply_form textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #e5e5e5;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.reply_form textarea {
+    height: 80px;
+    resize: vertical;
+}
+
+.reply_form .btn_3 {
+    margin-left: 10px;
+}
+
+.reply_btn {
+    cursor: pointer;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.reply_btn i {
+    margin-left: 5px;
+}
+
+.admin_tittle span {
+    font-size: 12px;
+    color: #888;
+    font-weight: normal;
+    margin-right: 10px;
+}
+
+.comment_part .media {
+    margin-bottom: 30px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.comment_part .media:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.comment_part .media .media {
+    margin-top: 30px;
+    padding-top: 30px;
+    border-top: 1px solid #f0f0f0;
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.admin_img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin-left: 20px;
+}
+
+@media (max-width: 768px) {
+    .admin_img {
+        width: 40px;
+        height: 40px;
+        margin-left: 15px;
+    }
+    .comment_part .media .media {
+        margin-right: 20px;
+    }
+}

@@ -13,6 +13,7 @@ import blogRoutes from "./routes/blog.js";
 import expressLayouts from 'express-ejs-layouts';
 import session from "express-session";
 import { title } from "process";
+import flash from "express-flash";
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -25,6 +26,9 @@ const port = process.env.PORT || 3000;
 //Set EJS as the template engine
 app.set('view engine', 'ejs');
 app.set('views', join(__dirname, 'views'));
+
+//for flashing messages
+app.use(flash());
 
 //Middleware for parsing from data
 app.use(express.urlencoded({extended: true}));
@@ -60,17 +64,17 @@ app.use((req, res, next) => {
 //ROUTES
 //static pages
 const pages = [
-    { path: '/',              view: 'index',         title: 'خانه',     courses: getData().courses,  instructors: getData().instructors },
+    { path: '/',              view: 'index',         title: 'خانه',        instructors : getData().instructors , courses: getData().courses},
     { path: '/about',         view: 'about',         title: 'درباره ما'},
-    { path: '/contact',       view: 'contact',       title: 'تماس با ما'},
+    { path: '/contact',       view: 'contact',       title: 'تماس با ما',   fontAwesome : true},
     { path: '/event',         view: 'event',         title: 'رویداد ها'},
-    { path: '/instructor',    view: 'instructor',    title: 'آموزگار',  instructors: getData().instructors},
+    { path: '/instructor',    view: 'instructors',   title: 'آموزگار',     instructors: getData().instructors},
     { path: '/testimonial',   view: 'testimonial',   title: 'گواهینامه'},
     { path: '/live-class',    view: 'live-class',    title: 'وبینار'},
-    { path: '/register',      view: 'register',      title: 'ثبت نام',     courseCss : true, fontAwesome : true},
+    { path: '/register',      view: 'register',      title: 'ثبت نام',      courseCss : true, fontAwesome : true},
     { path: '/profile',       view: 'profile',       title: 'پنل کاربری',  courseCss : true, fontAwesome : true},
-    { path: '/checkout',      view: 'checkout',      title: 'خرید' ,       courseCss : true, fontAwesome : true},
-    { path: '/quizzes',       view: 'quizzes',       title: 'آزمون' ,      courseCss : true, fontAwesome : true},
+    { path: '/checkout',      view: 'checkout',      title: 'خرید' ,        courseCss : true, fontAwesome : true},
+    { path: '/quizzes',       view: 'quizzes',       title: 'آزمون' ,       courseCss : true, fontAwesome : true},
 ];
 
 pages.forEach(page => {
