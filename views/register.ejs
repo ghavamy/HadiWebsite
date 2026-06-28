@@ -17,6 +17,13 @@
 </section> -->
 <!-- breadcrumb part end -->
 
+<!-- Flash Messages -->
+<% if (messages && messages.error) { %>
+  <div class="alert alert-danger" style="background: #f8d7da; color: #721c24; padding: 12px 20px; border-radius: 5px; margin-bottom: 20px; border: 1px solid #f5c6cb;">
+    <i class="icon_error-circle_alt"></i> <%= messages.error %>
+  </div>
+<% } %>
+
 <div class="container section_padding">
   <div class="auth-container">
 

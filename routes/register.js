@@ -18,7 +18,6 @@ router.get("/", (req, res) => {
 // REGISTER
 router.post("/", async (req, res) => {
   try {
-
     const {
       fullName,
       phone,
@@ -30,23 +29,33 @@ router.post("/", async (req, res) => {
       confirmPassword
     } = req.body;
 
+    // Check if password matches
     if (password !== confirmPassword) {
-      return res.status(400).send("رمز عبور مطابقت ندارد");
+      req.flash('error', 'رمز عبور مطابقت ندارد');
+      return res.redirect("/register");
+    }
+
+    // Check password length
+    if (password.length < 6) {
+      req.flash('error', 'رمز عبور باید حداقل ۶ کاراکتر باشد');
+      return res.redirect("/register");
+    }
+
+    // Check if user exists
+    const existingUser = db.prepare(
+      "SELECT * FROM users WHERE email = ? OR phone = ?"
+    ).get(email, phone);
+
+    if (existingUser) {
+      req.flash('error', 'این ایمیل یا شماره تلفن قبلاً ثبت شده است');
+      return res.redirect("/register");
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const stmt = db.prepare(`
       INSERT INTO users
-      (
-        fullName,
-        phone,
-        email,
-        role,
-        grade,
-        field,
-        password
-      )
+      (fullName, phone, email, role, grade, field, password)
       VALUES (?, ?, ?, ?, ?, ?, ?)
     `);
 
@@ -60,17 +69,13 @@ router.post("/", async (req, res) => {
       hashedPassword
     );
 
-    try 
-    {
-
+    try {
       await Promise.all([
         sendSMS(req.body),
         sendEmail(req.body),
         sendWelcomeEmail(req.body)
       ]);
-
-    } catch (smsError) 
-    {
+    } catch (smsError) {
       console.error("SMS Error:", smsError);
     }
 
@@ -81,66 +86,62 @@ router.post("/", async (req, res) => {
     };
 
     req.session.user = user;
-
+    req.flash('success', `خوش آمدید ${fullName}!`);
     res.redirect("/");
 
   } catch (err) {
     console.error(err);
-    res.status(500).send("خطا در ثبت کاربر");
+    req.flash('error', 'خطا در ثبت نام. لطفاً دوباره تلاش کنید.');
+    res.redirect("/register");
   }
 });
 
 // LOGIN
 router.post("/login", async (req, res) => {
-  try 
-  {
-
+  try {
     const { email, password } = req.body;
 
-    const stmt = db.prepare(
-      "SELECT * FROM users WHERE email = ?"
-    );
-
-    const user = stmt.get(email);
-
-    if (!user)
-    {
-      return res.status(401).send("کاربر یافت نشد");
+    // Validate inputs
+    if (!email || !password) {
+      req.flash('error', 'لطفاً ایمیل و رمز عبور را وارد کنید');
+      return res.redirect("/register");
     }
 
-    const match = await bcrypt.compare(
-      password,
-      user.password
-    );
+    const stmt = db.prepare("SELECT * FROM users WHERE email = ?");
+    const user = stmt.get(email);
 
-    if (!match) 
-    {
-      return res.status(401).send("رمز عبور اشتباه است");
+    if (!user) {
+      req.flash('error', 'کاربری با این ایمیل یافت نشد');
+      return res.redirect("/register");
+    }
+
+    const match = await bcrypt.compare(password, user.password);
+
+    if (!match) {
+      req.flash('error', 'رمز عبور اشتباه است');
+      return res.redirect("/register");
     }
 
     req.session.user = {
-        id: user.id,
-        fullName: user.fullName,
-        role: user.role
+      id: user.id,
+      fullName: user.fullName,
+      role: user.role
     };
 
+    //req.flash('success', `خوش آمدید ${user.fullName}!`);
     res.redirect("/");
 
-  } catch (err) 
-  {
+  } catch (err) {
     console.error(err);
-    res.status(500).send("خطا در ورود");
+    req.flash('error', 'خطا در ورود. لطفاً دوباره تلاش کنید.');
+    res.redirect("/register");
   }
 });
 
 router.get("/logout", (req, res) => {
-
   req.session.destroy(() => {
-
     res.redirect("/");
-
   });
-
 });
 
 export default router;

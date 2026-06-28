@@ -99,9 +99,7 @@
       ]
     }
   ],
-  "comments": [
-
-  ],
+  "comments": [],
   "courses": [
     {
       "slug": "hoosh-va-estedad-tahlili",
@@ -215,6 +213,289 @@
       "img": "/assets/img/instructors/محمد فرهنگیان.jpg",
       "name": "محمد فرهنگیان",
       "role": "معاون آموزشی"
+    },
+    {
+      "img": "/assets/img/instructors/ریحانه براری.png",
+      "name": "ریحانه براری",
+      "role": "مشاور ارشد"
+    },
+    {
+      "img": "/assets/img/instructors/مهسا اسلامی.png",
+      "name": "مهسا اسلامی",
+      "role": "مشاور ارشد"
+    },
+    {
+      "img": "/assets/img/instructors/علیرضا سنائی.png",
+      "name": "علیرضا سنائی",
+      "role": "مشاور ارشد"
     }
-  ]
+  ],
+  "pdfCourse": {
+    "slug": "pdf-download-course",
+    "title": "دوره دانلود PDF",
+    "experimental": {
+      "sections": [
+        {
+          "title": "دوازدهم",
+          "description": "قلم چی",
+          "lessons": [
+            {
+              "year": 1404,
+              "title": "4 مهر 1404",
+              "pdf": "4مهر1404 تجربی سوال.pdf",
+              "answer": "4مهر1404 تجربی پاسخ.pdf"
+            },
+            {
+              "year": 1404,
+              "title": "11 مهر 1404",
+              "pdf": "11مهر1404 تجربی سوال.pdf",
+              "answer": "11مهر1404 تجربی پاسخ.pdf"
+            },
+            {
+              "year": 1404,
+              "title": "18 مهر 1404",
+              "pdf": "18مهر1404 تجربی سوال.pdf",
+              "answer": "18مهر1404 تجربی پاسخ.pdf"
+            },
+            {
+              "year": 1404,
+              "title": "2 آبان 1404",
+              "pdf": "2آبان1404 تجربی سوال.pdf",
+              "answer": "2آبان1404 تجربی پاسخ.pdf"
+            }
+          ]
+        },
+        {
+          "title": "یازدهم",
+          "description": "قلم چی",
+          "lessons": [
+            {
+              "year": 4,
+              "title": "جلسه چهارم - شیمی آلی",
+              "pdf": "experimental_lesson4.pdf"
+            },
+            {
+              "year": 5,
+              "title": "جلسه پنجم - شیمی معدنی",
+              "pdf": "experimental_lesson5.pdf"
+            }
+          ]
+        },
+        {
+          "title": "دهم",
+          "description": "قلم چی",
+          "lessons": [
+            {
+              "year": 4,
+              "title": "جلسه چهارم - شیمی آلی",
+              "pdf": "experimental_lesson4.pdf"
+            },
+            {
+              "year": 5,
+              "title": "جلسه پنجم - شیمی معدنی",
+              "pdf": "experimental_lesson5.pdf"
+            }
+          ]
+        }
+      ]
+    },
+    "math": {
+      "sections": [
+        {
+          "title": "دوازدهم",
+          "description": "قلم چی",
+          "lessons": [
+            {
+              "year": 1404,
+              "title": "4 مهر 1404",
+              "pdf": "experimental_lesson1.pdf",
+              "answer": "experimental_lesson1.pdf"
+            },
+            {
+              "year": 1404,
+              "title": "11 مهر 1404",
+              "pdf": "experimental_lesson2.pdf",
+              "answer": "experimental_lesson2.pdf"
+            },
+            {
+              "year": 1404,
+              "title": "18 مهر 1404",
+              "pdf": "experimental_lesson3.pdf",
+              "answer": "experimental_lesson3.pdf"
+            },
+            {
+              "year": 1404,
+              "title": "2 آبان 1404",
+              "pdf": "experimental_lesson3.pdf",
+              "answer": "experimental_lesson3.pdf"
+            }
+          ]
+        },
+        {
+          "title": "یازدهم",
+          "description": "قلم چی",
+          "lessons": [
+            {
+              "year": 4,
+              "title": "جلسه چهارم - شیمی آلی",
+              "pdf": "experimental_lesson4.pdf"
+            },
+            {
+              "year": 5,
+              "title": "جلسه پنجم - شیمی معدنی",
+              "pdf": "experimental_lesson5.pdf"
+            }
+          ]
+        },
+        {
+          "title": "دهم",
+          "description": "قلم چی",
+          "lessons": [
+            {
+              "year": 4,
+              "title": "جلسه چهارم - شیمی آلی",
+              "pdf": "experimental_lesson4.pdf"
+            },
+            {
+              "year": 5,
+              "title": "جلسه پنجم - شیمی معدنی",
+              "pdf": "experimental_lesson5.pdf"
+            }
+          ]
+        }
+      ]
+    },
+    "humanities": {
+      "sections": [
+        {
+          "title": "دوازدهم",
+          "description": "قلم چی",
+          "lessons": [
+            {
+              "year": 1404,
+              "title": "4 مهر 1404",
+              "pdf": "experimental_lesson1.pdf",
+              "answer": "experimental_lesson1.pdf"
+            },
+            {
+              "year": 1404,
+              "title": "11 مهر 1404",
+              "pdf": "experimental_lesson2.pdf",
+              "answer": "experimental_lesson2.pdf"
+            },
+            {
+              "year": 1404,
+              "title": "18 مهر 1404",
+              "pdf": "experimental_lesson3.pdf",
+              "answer": "experimental_lesson3.pdf"
+            },
+            {
+              "year": 1404,
+              "title": "2 آبان 1404",
+              "pdf": "experimental_lesson3.pdf",
+              "answer": "experimental_lesson3.pdf"
+            }
+          ]
+        },
+        {
+          "title": "یازدهم",
+          "description": "قلم چی",
+          "lessons": [
+            {
+              "year": 4,
+              "title": "جلسه چهارم - شیمی آلی",
+              "pdf": "experimental_lesson4.pdf"
+            },
+            {
+              "year": 5,
+              "title": "جلسه پنجم - شیمی معدنی",
+              "pdf": "experimental_lesson5.pdf"
+            }
+          ]
+        },
+        {
+          "title": "دهم",
+          "description": "قلم چی",
+          "lessons": [
+            {
+              "year": 4,
+              "title": "جلسه چهارم - شیمی آلی",
+              "pdf": "experimental_lesson4.pdf"
+            },
+            {
+              "year": 5,
+              "title": "جلسه پنجم - شیمی معدنی",
+              "pdf": "experimental_lesson5.pdf"
+            }
+          ]
+        }
+      ]
+    },
+    "language": {
+      "sections": [
+        {
+          "title": "دوازدهم",
+          "description": "قلم چی",
+          "lessons": [
+            {
+              "year": 1404,
+              "title": "4 مهر 1404",
+              "pdf": "experimental_lesson1.pdf",
+              "answer": "experimental_lesson1.pdf"
+            },
+            {
+              "year": 1404,
+              "title": "11 مهر 1404",
+              "pdf": "experimental_lesson2.pdf",
+              "answer": "experimental_lesson2.pdf"
+            },
+            {
+              "year": 1404,
+              "title": "18 مهر 1404",
+              "pdf": "experimental_lesson3.pdf",
+              "answer": "experimental_lesson3.pdf"
+            },
+            {
+              "year": 1404,
+              "title": "2 آبان 1404",
+              "pdf": "experimental_lesson3.pdf",
+              "answer": "experimental_lesson3.pdf"
+            }
+          ]
+        },
+        {
+          "title": "یازدهم",
+          "description": "قلم چی",
+          "lessons": [
+            {
+              "year": 4,
+              "title": "جلسه چهارم - شیمی آلی",
+              "pdf": "experimental_lesson4.pdf"
+            },
+            {
+              "year": 5,
+              "title": "جلسه پنجم - شیمی معدنی",
+              "pdf": "experimental_lesson5.pdf"
+            }
+          ]
+        },
+        {
+          "title": "دهم",
+          "description": "قلم چی",
+          "lessons": [
+            {
+              "year": 4,
+              "title": "جلسه چهارم - شیمی آلی",
+              "pdf": "experimental_lesson4.pdf"
+            },
+            {
+              "year": 5,
+              "title": "جلسه پنجم - شیمی معدنی",
+              "pdf": "experimental_lesson5.pdf"
+            }
+          ]
+        }
+      ]
+    }
+  }
 }

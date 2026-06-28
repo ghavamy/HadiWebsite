@@ -3,12 +3,13 @@ import "dotenv/config";
 import express from 'express';
 import path, { join , dirname} from 'path';
 import { fileURLToPath } from 'url';
-import { getData } from "./services/readData.js";
+import { getData , countPDFFiles } from "./services/readData.js";
 import fs from 'fs';
 //routes
 import registerRoutes from "./routes/register.js";
 import courseRoutes from "./routes/course.js";
 import blogRoutes from "./routes/blog.js";
+import downloadRoutes from "./routes/download.js";
 
 import expressLayouts from 'express-ejs-layouts';
 import session from "express-session";
@@ -53,11 +54,8 @@ app.use(
 
 //for accessing users in session everywhere
 app.use((req, res, next) => {
-
     res.locals.user = req.session.user;
-
     next();
-
 });
 
 
@@ -71,10 +69,11 @@ const pages = [
     { path: '/instructor',    view: 'instructors',   title: 'آموزگار',     instructors: getData().instructors},
     { path: '/testimonial',   view: 'testimonial',   title: 'گواهینامه'},
     { path: '/live-class',    view: 'live-class',    title: 'وبینار'},
-    { path: '/register',      view: 'register',      title: 'ثبت نام',      courseCss : true, fontAwesome : true},
-    { path: '/profile',       view: 'profile',       title: 'پنل کاربری',  courseCss : true, fontAwesome : true},
-    { path: '/checkout',      view: 'checkout',      title: 'خرید' ,        courseCss : true, fontAwesome : true},
-    { path: '/quizzes',       view: 'quizzes',       title: 'آزمون' ,       courseCss : true, fontAwesome : true},
+    { path: '/register',      view: 'register',      title: 'ثبت نام',                 courseCss : true, fontAwesome : true},
+    { path: '/profile',       view: 'profile',       title: 'پنل کاربری',              courseCss : true, fontAwesome : true},
+    { path: '/checkout',      view: 'checkout',      title: 'خرید' ,                   courseCss : true,  fontAwesome : true},
+    { path: '/quizzes',       view: 'quizzes',       title: 'آزمون های آنلاین' ,        courseCss : true, fontAwesome : true},
+    { path: '/testExams',     view: 'testExams',     title: 'دانلود آزمون' ,           courseCss : true, fontAwesome : true, pdfCourse : getData().pdfCourse, fileCount : countPDFFiles(getData().pdfCourse)},
 ];
 
 pages.forEach(page => {
@@ -98,6 +97,7 @@ pages.forEach(page => {
 app.use("/blog", blogRoutes);
 app.use("/course", courseRoutes);
 app.use("/register", registerRoutes);
+app.use("/download", downloadRoutes);
 
 // Your existing static files still work!
 // Any file in 'public' folder is still served automatically
