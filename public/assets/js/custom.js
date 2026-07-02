@@ -393,4 +393,35 @@
 
     });
 
+    // for downloading exams page
+    $(function() {
+        // Tab switching
+        $('.tab-btn-modern').on('click', function() {
+            var $this = $(this);
+            var target = $this.data('tab');
+            
+            $('.tab-btn-modern').removeClass('active');
+            $this.addClass('active');
+            
+            $('.pdf-tab-panel').removeClass('active');
+            $('#panel-' + target).addClass('active');
+        });
+        
+        // Section toggle
+        $('.pdf-section-header').on('click', function() {
+            var $this = $(this);
+            var $body = $this.next('.pdf-section-body');
+            
+            $this.toggleClass('active');
+            $body.toggleClass('open');
+        });
+        
+        // Open first section by default
+        var $firstSection = $('.pdf-section-header').first();
+        if ($firstSection.length) {
+            $firstSection.addClass('active');
+            $firstSection.next('.pdf-section-body').addClass('open');
+        }
+    });
+
 }(jQuery));
