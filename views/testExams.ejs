@@ -20,22 +20,22 @@
         <button class="tab-btn-modern active" data-tab="experimental">
             <i class="fas fa-flask"></i>
             <span>تجربی</span>
-            <span class="tab-count">5</span>
+            <span class="tab-count"><%= pdfCourse.experimental.sections.reduce((sum, s) => sum + s.lessons.length, 0) %></span>
         </button>
         <button class="tab-btn-modern" data-tab="math">
             <i class="fas fa-square-root-variable"></i>
             <span>ریاضی</span>
-            <span class="tab-count">4</span>
+            <span class="tab-count"><%= pdfCourse.math.sections.reduce((sum, s) => sum + s.lessons.length, 0) %></span>
         </button>
         <button class="tab-btn-modern" data-tab="humanities">
             <i class="fas fa-book-open"></i>
             <span>انسانی</span>
-            <span class="tab-count">3</span>
+            <span class="tab-count"><%= pdfCourse.humanities.sections.reduce((sum, s) => sum + s.lessons.length, 0) %></span>
         </button>
         <button class="tab-btn-modern" data-tab="language">
             <i class="fas fa-language"></i>
             <span>زبان</span>
-            <span class="tab-count">3</span>
+            <span class="tab-count"><%= pdfCourse.language.sections.reduce((sum, s) => sum + s.lessons.length, 0) %></span>
         </button>
     </div>
 
@@ -242,13 +242,3 @@
         </div>
     </div>
 </div>
-
-<!-- Styles -->
-<style>
-   
-</style>
-
-<!-- JavaScript -->
-<script>
-
-</script>

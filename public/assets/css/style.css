@@ -7436,6 +7436,7 @@ html[dir="rtl"] .lp-archive-courses .course-summary {
         margin: 0;
         opacity: 0.9;
         font-size: 14px;
+        color: #cbe0fb;
     }
 
     .header-stats {

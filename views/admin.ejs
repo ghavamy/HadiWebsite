@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Vazir', 'IRANSans', sans-serif;
+            background: #f0f2f5;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            font-size: 24px;
+            color: #1a1a2e;
+        }
+        .header h1 i {
+            color: #4a6cf7;
+        }
+        
+        .alert {
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        .alert-danger {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .add-form {
+            background: white;
+            padding: 25px 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+        .add-form h3 {
+            margin-bottom: 20px;
+            color: #1a1a2e;
+        }
+        .add-form h3 i {
+            color: #4a6cf7;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            align-items: end;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            font-size: 13px;
+            color: #475569;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            background: white;
+        }
+        .form-group input:focus, .form-group select:focus {
+            border-color: #4a6cf7;
+            outline: none;
+        }
+        .form-group input[type="file"] {
+            padding: 8px;
+        }
+        .btn-add {
+            padding: 10px 25px;
+            background: #4a6cf7;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            height: 44px;
+            white-space: nowrap;
+        }
+        .btn-add:hover {
+            background: #3a5cd5;
+        }
+        
+        .exams-list {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 20px;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .tab {
+            padding: 10px 20px;
+            background: #f1f5f9;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: #64748b;
+            font-family: inherit;
+        }
+        .tab:hover {
+            background: #e2e8f0;
+        }
+        .tab.active {
+            background: #4a6cf7;
+            color: white;
+        }
+        .tab .count {
+            background: rgba(255,255,255,0.2);
+            padding: 1px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            margin-right: 5px;
+        }
+        .tab.active .count {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .panel { display: none; }
+        .panel.active { display: block; }
+        
+        .section {
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        .section-header {
+            background: #f8fafc;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+        .section-header h4 {
+            font-size: 16px;
+            color: #1a1a2e;
+        }
+        .section-header .meta {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 13px;
+            color: #94a3b8;
+        }
+        .section-header .meta i {
+            transition: transform 0.3s;
+        }
+        .section-header .meta i.rotated {
+            transform: rotate(180deg);
+        }
+        .section-body {
+            padding: 15px 20px;
+            display: none;
+        }
+        .section-body.open {
+            display: block;
+        }
+        
+        .exam {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background: #f8fafc;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+        .exam:hover {
+            background: #f1f5f9;
+        }
+        .exam-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .exam-info .year {
+            background: #e2e8f0;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            color: #475569;
+        }
+        .exam-info .title {
+            font-weight: 500;
+        }
+        .exam-info .files {
+            display: flex;
+            gap: 10px;
+            font-size: 13px;
+        }
+        .exam-info .files a {
+            color: #4a6cf7;
+            text-decoration: none;
+        }
+        .exam-info .files a:hover {
+            text-decoration: underline;
+        }
+        .exam-info .files .no-file {
+            color: #94a3b8;
+        }
+        .exam-info .file-name {
+            font-size: 11px;
+            color: #94a3b8;
+            margin-right: 5px;
+        }
+        .delete-btn {
+            color: #dc3545;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 4px 10px;
+            border-radius: 4px;
+        }
+        .delete-btn:hover {
+            background: #fee2e2;
+        }
+        .delete-section-btn {
+            color: #dc3545;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        .delete-section-btn:hover {
+            background: #fee2e2;
+        }
+        
+        .empty {
+            text-align: center;
+            padding: 40px;
+            color: #94a3b8;
+        }
+        .empty i {
+            font-size: 40px;
+            display: block;
+            margin-bottom: 15px;
+        }
+        
+        .file-hint {
+            font-size: 11px;
+            color: #94a3b8;
+            margin-top: 4px;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .exam {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            .exam-info {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1><i class="fas fa-file-pdf"></i> مدیریت آزمون‌ها</h1>
+        </div>
+        
+        <!-- Alerts -->
+        <% if (typeof error !== 'undefined' && error) { %>
+            <div class="alert alert-danger"><%= error %></div>
+        <% } %>
+        <% if (typeof success !== 'undefined' && success) { %>
+            <div class="alert alert-success"><%= success %></div>
+        <% } %>
+        
+        <!-- Add Form -->
+        <div class="add-form">
+            <h3><i class="fas fa-plus-circle"></i> افزودن آزمون جدید</h3>
+            <form action="/admin/add" method="POST" enctype="multipart/form-data">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>رشته *</label>
+                        <select name="subject" required>
+                            <option value="">انتخاب...</option>
+                            <option value="experimental">تجربی</option>
+                            <option value="math">ریاضی</option>
+                            <option value="humanities">انسانی</option>
+                            <option value="language">زبان</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>پایه *</label>
+                        <select name="grade" required>
+                            <option value="">انتخاب...</option>
+                            <option value="دهم">دهم</option>
+                            <option value="یازدهم">یازدهم</option>
+                            <option value="دوازدهم">دوازدهم</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>سال *</label>
+                        <input type="number" name="year" placeholder="1404" required>
+                    </div>
+                    <div class="form-group">
+                        <label>عنوان آزمون *</label>
+                        <input type="text" name="title" placeholder="مثلاً 4 مهر 1404" required>
+                    </div>
+                    <div class="form-group">
+                        <label>فایل سوال (PDF) *</label>
+                        <input type="file" name="pdfFile" accept=".pdf" required>
+                        <!-- <div class="file-hint">فایل PDF را انتخاب کنید</div> -->
+                    </div>
+                    <div class="form-group">
+                        <label>فایل پاسخ (PDF)</label>
+                        <input type="file" name="answerFile" accept=".pdf">
+                        <!-- <div class="file-hint">اختیاری - فایل PDF پاسخ</div> -->
+                    </div>
+                    <button type="submit" class="btn-add"><i class="fas fa-plus"></i> افزودن</button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Exams List -->
+        <div class="exams-list">
+            <div class="tabs">
+                <% subjects.forEach((subject, index) => { %>
+                    <button class="tab <%= index === 0 ? 'active' : '' %>" data-subject="<%= subject %>">
+                        <i class="fas <%= examsData[subject].icon %>"></i>
+                        <%= examsData[subject].name %>
+                        <span class="count">
+                            <%= examsData[subject].sections.reduce((sum, s) => sum + s.lessons.length, 0) %>
+                        </span>
+                    </button>
+                <% }) %>
+            </div>
+            
+            <% subjects.forEach((subject, index) => { %>
+                <div class="panel <%= index === 0 ? 'active' : '' %>" id="panel-<%= subject %>">
+                    <% const data = examsData[subject]; %>
+                    <% if (data.sections && data.sections.length > 0) { %>
+                        <% data.sections.forEach((section) => { %>
+                            <div class="section">
+                                <div class="section-header" onclick="toggleSection(this)">
+                                    <h4><%= section.title %></h4>
+                                    <div class="meta">
+                                        <span><%= section.lessons.length %> آزمون</span>
+                                        <i class="fas fa-chevron-down"></i>
+                                        <!-- <a href="/admin/delete-section/<%= subject %>/<%= section.index %>" 
+                                           class="delete-section-btn" 
+                                           onclick="return confirm('حذف این بخش و تمام آزمون‌های آن؟')">
+                                            <i class="fas fa-trash"></i>
+                                        </a> -->
+                                    </div>
+                                </div>
+                                <div class="section-body">
+                                    <% section.lessons.forEach((lesson) => { %>
+                                        <div class="exam">
+                                            <div class="exam-info">
+                                                <span class="year"><%= lesson.year %></span>
+                                                <span class="title"><%= lesson.title %></span>
+                                                <div class="files">
+                                                    <% if (lesson.pdf) { %>
+                                                        <a href="/download/pdf/<%= lesson.pdf %>" target="_blank">
+                                                            <i class="fas fa-file-pdf"></i> سوال
+                                                        </a>
+                                                        <!-- <span class="file-name">(<%= lesson.pdfDisplayName || lesson.pdf %>)</span> -->
+                                                    <% } else { %>
+                                                        <span class="no-file">بدون سوال</span>
+                                                    <% } %>
+                                                    <% if (lesson.answer) { %>
+                                                        <a href="/download/pdf/<%= lesson.answer %>" target="_blank">
+                                                            <i class="fas fa-file-pdf"></i> پاسخ
+                                                        </a>
+                                                        <!-- <span class="file-name">(<%= lesson.answerDisplayName || lesson.answer %>)</span> -->
+                                                    <% } else { %>
+                                                        <span class="no-file">بدون پاسخ</span>
+                                                    <% } %>
+                                                </div>
+                                            </div>
+                                            <a href="/admin/delete/<%= subject %>/<%= section.index %>/<%= lesson.index %>" 
+                                               class="delete-btn" 
+                                               onclick="return confirm('حذف این آزمون؟')">
+                                                <i class="fas fa-times"></i>
+                                            </a>
+                                        </div>
+                                    <% }) %>
+                                </div>
+                            </div>
+                        <% }) %>
+                    <% } else { %>
+                        <div class="empty">
+                            <i class="fas fa-file-pdf"></i>
+                            <p>هیچ آزمونی برای این رشته وجود ندارد</p>
+                        </div>
+                    <% } %>
+                </div>
+            <% }) %>
+        </div>
+    </div>
+    
+    <script>
+        // Tab switching
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                const subject = this.dataset.subject;
+                document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+                document.getElementById('panel-' + subject).classList.add('active');
+            });
+        });
+        
+        // Section toggle
+        function toggleSection(header) {
+            const body = header.nextElementSibling;
+            const icon = header.querySelector('.fa-chevron-down');
+            body.classList.toggle('open');
+            icon.classList.toggle('rotated');
+        }
+        
+        // Open first section by default
+        document.addEventListener('DOMContentLoaded', function() {
+            const firstSection = document.querySelector('.section-header');
+            if (firstSection) {
+                const body = firstSection.nextElementSibling;
+                const icon = firstSection.querySelector('.fa-chevron-down');
+                body.classList.add('open');
+                icon.classList.add('rotated');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -28,24 +28,3 @@ export function writeData(newData) {
         throw error;
     }
 }
-
-export function countPDFFiles(pdfCourse) {
-    let count = 0;
-    const subjects = ['experimental', 'math', 'humanities', 'language'];
-    
-    subjects.forEach(subject => {
-        if (pdfCourse[subject] && pdfCourse[subject].sections) {
-            pdfCourse[subject].sections.forEach(section => {
-                if (section.lessons) {
-                    section.lessons.forEach(lesson => {
-                        if (lesson.pdf) {
-                            count++;
-                        }
-                    });
-                }
-            });
-        }
-    });
-    
-    return count;
-}

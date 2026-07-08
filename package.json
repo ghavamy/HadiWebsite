@@ -10,6 +10,7 @@
     "express-flash": "^0.0.2",
     "express-session": "^1.19.0",
     "morgan": "^1.10.1",
+    "multer": "^2.2.0",
     "nodemailer": "^9.0.1",
     "uuid": "^14.0.1"
   },
