@@ -1,6 +1,6 @@
 // routes/admin.js
 import { Router } from "express";
-import { getData, writeData } from "../services/readData.js";
+import { getDb } from "../database/database.js";
 import multer from "multer";
 import path from "path";
 import { fileURLToPath } from 'url';
@@ -9,19 +9,18 @@ import fs from 'fs';
 const router = Router();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const uploadPath = path.join(__dirname, '../public/assets/pdf');
+
 
 // Configure multer for file upload
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        const uploadPath = path.join(__dirname, '../public/assets/pdf');
         if (!fs.existsSync(uploadPath)) {
             fs.mkdirSync(uploadPath, { recursive: true });
         }
         cb(null, uploadPath);
     },
     filename: function (req, file, cb) {
-        // ✅ We'll rename later in the route handler
-        // Just use a temporary name for now
         const timestamp = Date.now();
         const ext = path.extname(file.originalname);
         cb(null, `${timestamp}${ext}`);
@@ -30,6 +29,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({
     storage: storage,
+    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
     fileFilter: function (req, file, cb) {
         if (file.mimetype === 'application/pdf' || file.originalname.endsWith('.pdf')) {
             cb(null, true);
@@ -39,67 +39,107 @@ const upload = multer({
     }
 });
 
-// Admin page
-router.get('/', (req, res) => {
-    const data = getData();
-    const pdfCourse = data.pdfCourse;
-    
-    const subjects = ['experimental', 'math', 'humanities', 'language'];
-    const subjectNames = {
+// Helper function to create safe filename
+function createSafeFilename(title, grade, subject, type) {
+    const maxTitleLength = 50;
+    let safeTitle = title.replace(/[\/\\:*?"<>|]/g, '');
+    if (safeTitle.length > maxTitleLength) {
+        safeTitle = safeTitle.substring(0, maxTitleLength);
+    }
+    const safeGrade = grade.replace(/[\/\\:*?"<>|]/g, '');
+    const subjectMap = {
         experimental: 'تجربی',
         math: 'ریاضی',
         humanities: 'انسانی',
         language: 'زبان'
     };
-    const subjectIcons = {
-        experimental: 'fa-flask',
-        math: 'fa-square-root-variable',
-        humanities: 'fa-book-open',
-        language: 'fa-language'
-    };
-    
-    const examsData = {};
-    subjects.forEach(subject => {
-        examsData[subject] = {
-            name: subjectNames[subject],
-            icon: subjectIcons[subject],
-            sections: []
+    const subjectName = subjectMap[subject] || subject;
+    return `${safeTitle} - ${safeGrade} - ${subjectName} - ${type}.pdf`;
+}
+
+// Admin page - ✅ Read from database
+router.get('/', async (req, res) => {
+    try {
+        const db = await getDb();
+        const exams = await db.all('SELECT * FROM pdf_exams ORDER BY year DESC, grade ASC');
+        
+        const subjects = ['experimental', 'math', 'humanities', 'language'];
+        const subjectNames = {
+            experimental: 'تجربی',
+            math: 'ریاضی',
+            humanities: 'انسانی',
+            language: 'زبان'
+        };
+        const subjectIcons = {
+            experimental: 'fa-flask',
+            math: 'fa-square-root-variable',
+            humanities: 'fa-book-open',
+            language: 'fa-language'
         };
         
-        if (pdfCourse[subject]) {
-            pdfCourse[subject].sections.forEach((section, sectionIndex) => {
-                examsData[subject].sections.push({
-                    index: sectionIndex,
-                    title: section.title,
-                    description: section.description,
-                    lessons: section.lessons.map((lesson, lessonIndex) => ({
-                        index: lessonIndex,
-                        year: lesson.year,
-                        title: lesson.title,
-                        pdf: lesson.pdf,
-                        answer: lesson.answer || null
-                    }))
+        const examsData = {};
+        subjects.forEach(subject => {
+            examsData[subject] = {
+                name: subjectNames[subject],
+                icon: subjectIcons[subject],
+                sections: []
+            };
+        });
+        
+        // Group exams by subject and grade
+        exams.forEach(exam => {
+            if (!examsData[exam.subject]) return;
+            
+            let section = examsData[exam.subject].sections.find(s => s.title === exam.grade);
+            if (!section) {
+                section = {
+                    title: exam.grade,
+                    description: 'آزمون',
+                    lessons: []
+                };
+                examsData[exam.subject].sections.push(section);
+            }
+            
+            section.lessons.push({
+                id: exam.id,
+                year: exam.year,
+                title: exam.title,
+                pdf: exam.pdf_path,
+                answer: exam.answer_path
+            });
+        });
+        
+        // Add indexes for delete routes
+        subjects.forEach(subject => {
+            examsData[subject].sections.forEach((section, sectionIndex) => {
+                section.index = sectionIndex;
+                section.lessons.forEach((lesson, lessonIndex) => {
+                    lesson.index = lessonIndex;
                 });
             });
-        }
-    });
-    
-    res.render('admin', {
-        title: 'مدیریت آزمون‌ها',
-        layout: false,
-        subjects: subjects,
-        examsData: examsData,
-        subjectNames: subjectNames,
-        error: req.query.error || null,
-        success: req.query.success || null
-    });
+        });
+        
+        res.render('admin', {
+            title: 'مدیریت آزمون‌ها',
+            layout: false,
+            subjects: subjects,
+            examsData: examsData,
+            subjectNames: subjectNames,
+            error: req.query.error || null,
+            success: req.query.success || null
+        });
+        
+    } catch (error) {
+        console.error('Admin page error:', error);
+        res.redirect('/admin?error=خطا در بارگذاری صفحه');
+    }
 });
 
-// Add exam with file upload - RENAME files after upload
+// Add exam - ✅ Save to database
 router.post('/add', upload.fields([
     { name: 'pdfFile', maxCount: 1 },
     { name: 'answerFile', maxCount: 1 }
-]), (req, res) => {
+]), async (req, res) => {
     try {
         const { subject, grade, year, title } = req.body;
         const pdfFile = req.files['pdfFile'] ? req.files['pdfFile'][0] : null;
@@ -109,166 +149,120 @@ router.post('/add', upload.fields([
             return res.redirect('/admin?error=لطفاً تمام فیلدهای الزامی را پر کنید');
         }
         
-        // ✅ Create meaningful filenames
-        const subjectMap = {
-            experimental: 'تجربی',
-            math: 'ریاضی',
-            humanities: 'انسانی',
-            language: 'زبان'
-        };
-        
-        const subjectName = subjectMap[subject] || subject;
-        const safeTitle = title.replace(/[\/\\:*?"<>|]/g, ''); // Remove invalid filename characters
-        const safeGrade = grade.replace(/[\/\\:*?"<>|]/g, '');
-        
-        // ✅ Build new filenames
-        const pdfNewName = `${safeTitle} - ${safeGrade} - ${subjectName} - سوال.pdf`;
-        let answerNewName = null;
-        
-        if (answerFile) {
-            answerNewName = `${safeTitle} - ${safeGrade} - ${subjectName} - پاسخ.pdf`;
-        }
-        
-        // ✅ Rename the uploaded files
-        const pdfOldPath = path.join(__dirname, '../public/assets/pdf', pdfFile.filename);
-        const pdfNewPath = path.join(__dirname, '../public/assets/pdf', pdfNewName);
+        // Create meaningful filenames
+        const pdfNewName = createSafeFilename(title, grade, subject, 'سوال');
+        const pdfOldPath = path.join(uploadPath, pdfFile.filename);
+        const pdfNewPath = path.join(uploadPath, pdfNewName);
         
         // Rename PDF file
         if (fs.existsSync(pdfOldPath)) {
             fs.renameSync(pdfOldPath, pdfNewPath);
+        } else {
+            return res.redirect('/admin?error=خطا در آپلود فایل');
         }
         
-        // Rename answer file if exists
-        let answerPath = null;
-        if (answerFile && answerNewName) {
-            const answerOldPath = path.join(__dirname, '../public/assets/pdf', answerFile.filename);
-            const answerNewPath = path.join(__dirname, '../public/assets/pdf', answerNewName);
+        let answerNewName = null;
+        if (answerFile) {
+            answerNewName = createSafeFilename(title, grade, subject, 'پاسخ');
+            const answerOldPath = path.join(uploadPath, answerFile.filename);
+            const answerNewPath = path.join(uploadPath, answerNewName);
             if (fs.existsSync(answerOldPath)) {
                 fs.renameSync(answerOldPath, answerNewPath);
-                answerPath = answerNewName;
             }
         }
         
-        const data = getData();
-        const pdfCourse = data.pdfCourse;
-        
-        if (!pdfCourse[subject]) {
-            pdfCourse[subject] = { sections: [] };
-        }
-        
-        let targetSection = pdfCourse[subject].sections.find(s => s.title === grade);
-        
-        if (!targetSection) {
-            targetSection = {
-                title: grade,
-                description: 'قلم چی',
-                lessons: []
-            };
-            pdfCourse[subject].sections.push(targetSection);
-        }
-        
-        // ✅ Store the new meaningful names
-        const newLesson = {
-            year: parseInt(year),
-            title: title,
-            pdf: pdfNewName  // ✅ Now storing the meaningful name
-        };
-        
-        if (answerPath) {
-            newLesson.answer = answerPath;  // ✅ Now storing the meaningful name
-        }
-        
-        targetSection.lessons.push(newLesson);
-        writeData(data);
+        // ✅ Save to database
+        const db = await getDb();
+        await db.run(
+            `INSERT INTO pdf_exams (subject, grade, year, title, pdf_path, answer_path) 
+             VALUES (?, ?, ?, ?, ?, ?)`,
+            [subject, grade, parseInt(year), title, pdfNewName, answerNewName]
+        );
         
         res.redirect('/admin?success=آزمون با موفقیت اضافه شد');
         
     } catch (error) {
-        console.error(error);
+        console.error('Add exam error:', error);
         res.redirect('/admin?error=خطا در افزودن آزمون');
     }
 });
 
-// Delete exam
-router.get('/delete/:subject/:sectionIndex/:lessonIndex', (req, res) => {
+// Delete exam - ✅ Delete from database
+router.get('/delete/:id', async (req, res) => {
     try {
-        const { subject, sectionIndex, lessonIndex } = req.params;
+        const examId = parseInt(req.params.id);
+        const db = await getDb();
         
-        const data = getData();
-        const pdfCourse = data.pdfCourse;
+        // Get exam info first to delete files
+        const exam = await db.get('SELECT * FROM pdf_exams WHERE id = ?', examId);
         
-        if (pdfCourse[subject] && pdfCourse[subject].sections[sectionIndex]) {
-            const section = pdfCourse[subject].sections[sectionIndex];
-            const lesson = section.lessons[lessonIndex];
-            
-            // Delete the actual files from disk
-            if (lesson.pdf) {
-                const pdfPath = path.join(__dirname, '../public/assets/pdf', lesson.pdf);
-                if (fs.existsSync(pdfPath)) {
-                    fs.unlinkSync(pdfPath);
-                }
-            }
-            if (lesson.answer) {
-                const answerPath = path.join(__dirname, '../public/assets/pdf', lesson.answer);
-                if (fs.existsSync(answerPath)) {
-                    fs.unlinkSync(answerPath);
-                }
-            }
-            
-            section.lessons.splice(parseInt(lessonIndex), 1);
-            
-            // if (section.lessons.length === 0) {
-            //     pdfCourse[subject].sections.splice(parseInt(sectionIndex), 1);
-            // }
-            
-            writeData(data);
-            res.redirect('/admin?success=آزمون با موفقیت حذف شد');
-        } else {
-            res.redirect('/admin?error=آزمون یافت نشد');
+        if (!exam) {
+            return res.redirect('/admin?error=آزمون یافت نشد');
         }
         
+        // Delete PDF files from disk
+        if (exam.pdf_path) {
+            const pdfPath = path.join(uploadPath, exam.pdf_path);
+            if (fs.existsSync(pdfPath)) {
+                fs.unlinkSync(pdfPath);
+            }
+        }
+        if (exam.answer_path) {
+            const answerPath = path.join(uploadPath, exam.answer_path);
+            if (fs.existsSync(answerPath)) {
+                fs.unlinkSync(answerPath);
+            }
+        }
+        
+        // ✅ Delete from database
+        await db.run('DELETE FROM pdf_exams WHERE id = ?', examId);
+        
+        res.redirect('/admin?success=آزمون با موفقیت حذف شد');
+        
     } catch (error) {
-        console.error(error);
+        console.error('Delete exam error:', error);
         res.redirect('/admin?error=خطا در حذف آزمون');
     }
 });
 
-// Delete entire section
-router.get('/delete-section/:subject/:sectionIndex', (req, res) => {
+// Delete entire section - ✅ Delete multiple exams
+router.get('/delete-section/:subject/:grade', async (req, res) => {
     try {
-        const { subject, sectionIndex } = req.params;
+        const { subject, grade } = req.params;
+        const db = await getDb();
         
-        const data = getData();
-        const pdfCourse = data.pdfCourse;
+        // Get all exams in this section
+        const exams = await db.all(
+            'SELECT * FROM pdf_exams WHERE subject = ? AND grade = ?',
+            [subject, grade]
+        );
         
-        if (pdfCourse[subject] && pdfCourse[subject].sections[sectionIndex]) {
-            const section = pdfCourse[subject].sections[sectionIndex];
-            
-            // Delete all files in the section
-            section.lessons.forEach(lesson => {
-                if (lesson.pdf) {
-                    const pdfPath = path.join(__dirname, '../public/assets/pdf', lesson.pdf);
-                    if (fs.existsSync(pdfPath)) {
-                        fs.unlinkSync(pdfPath);
-                    }
+        // Delete all files
+        exams.forEach(exam => {
+            if (exam.pdf_path) {
+                const pdfPath = path.join(uploadPath, exam.pdf_path);
+                if (fs.existsSync(pdfPath)) {
+                    fs.unlinkSync(pdfPath);
                 }
-                if (lesson.answer) {
-                    const answerPath = path.join(__dirname, '../public/assets/pdf', lesson.answer);
-                    if (fs.existsSync(answerPath)) {
-                        fs.unlinkSync(answerPath);
-                    }
+            }
+            if (exam.answer_path) {
+                const answerPath = path.join(uploadPath, exam.answer_path);
+                if (fs.existsSync(answerPath)) {
+                    fs.unlinkSync(answerPath);
                 }
-            });
-            
-            pdfCourse[subject].sections.splice(parseInt(sectionIndex), 1);
-            writeData(data);
-            res.redirect('/admin?success=بخش با موفقیت حذف شد');
-        } else {
-            res.redirect('/admin?error=بخش یافت نشد');
-        }
+            }
+        });
+        
+        // ✅ Delete from database
+        await db.run(
+            'DELETE FROM pdf_exams WHERE subject = ? AND grade = ?',
+            [subject, grade]
+        );
+        
+        res.redirect('/admin?success=بخش با موفقیت حذف شد');
         
     } catch (error) {
-        console.error(error);
+        console.error('Delete section error:', error);
         res.redirect('/admin?error=خطا در حذف بخش');
     }
 });

@@ -16,6 +16,7 @@ import expressLayouts from 'express-ejs-layouts';
 import session from "express-session";
 import { title } from "process";
 import flash from "express-flash";
+import { createAllTables } from "./database/database.js";
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -43,6 +44,15 @@ app.use(express.static(join(__dirname, 'public')));
 //for puttin the layout on top of the rest of the structure
 app.use(expressLayouts);
 app.set('layout', 'layouts/main');
+
+// ✅ Create tables once when server starts
+try {
+    await createAllTables();
+    console.log('✅ Database tables ready');
+} catch (error) {
+    console.error('❌ Database error:', error);
+    process.exit(1);
+}
 
 
 app.use(

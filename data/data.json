@@ -234,27 +234,5 @@
       "name": "مهدیه تاجیک",
       "role": "روانشناس"
     }
-  ],
-  "pdfCourse": {
-    "slug": "pdf-download-course",
-    "title": "دوره دانلود PDF",
-    "experimental": {
-      "sections": [
-        {
-          "title": "دوازدهم",
-          "description": "قلم چی",
-          "lessons": []
-        }
-      ]
-    },
-    "math": {
-      "sections": []
-    },
-    "humanities": {
-      "sections": []
-    },
-    "language": {
-      "sections": []
-    }
-  }
+  ]
 }

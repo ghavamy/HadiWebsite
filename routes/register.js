@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { sendSMS } from "../services/smsService.js";
 import { sendEmail , sendWelcomeEmail } from "../services/emailService.js";
-import db from "../database/database.js";
+import { getDb } from "../database/database.js";
 import bcrypt from "bcrypt";
 
 const router = Router();
@@ -29,6 +29,8 @@ router.post("/", async (req, res) => {
       confirmPassword
     } = req.body;
 
+    const db = await getDb();
+
     // Check if password matches
     if (password !== confirmPassword) {
       req.flash('error', 'رمز عبور مطابقت ندارد');
@@ -41,10 +43,11 @@ router.post("/", async (req, res) => {
       return res.redirect("/register");
     }
 
-    // Check if user exists
-    const existingUser = db.prepare(
-      "SELECT * FROM users WHERE email = ? OR phone = ?"
-    ).get(email, phone);
+    // ✅ Check if user exists - using db.get()
+    const existingUser = await db.get(
+      "SELECT * FROM users WHERE email = ? OR phone = ?",
+      [email, phone]
+    );
 
     if (existingUser) {
       req.flash('error', 'این ایمیل یا شماره تلفن قبلاً ثبت شده است');
@@ -53,20 +56,11 @@ router.post("/", async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const stmt = db.prepare(`
-      INSERT INTO users
-      (fullName, phone, email, role, grade, field, password)
-      VALUES (?, ?, ?, ?, ?, ?, ?)
-    `);
-
-    const result = stmt.run(
-      fullName,
-      phone,
-      email,
-      role,
-      grade,
-      field,
-      hashedPassword
+    // ✅ Insert user - using db.run()
+    const result = await db.run(
+      `INSERT INTO users (fullName, phone, email, role, grade, field, password)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [fullName, phone, email, role, grade, field, hashedPassword]
     );
 
     try {
@@ -80,7 +74,7 @@ router.post("/", async (req, res) => {
     }
 
     const user = {
-      id: result.lastInsertRowid,
+      id: result.lastID,  // ✅ Changed from lastInsertRowid to lastID
       fullName,
       role
     };
@@ -101,14 +95,19 @@ router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    const db = await getDb();
+
     // Validate inputs
     if (!email || !password) {
       req.flash('error', 'لطفاً ایمیل و رمز عبور را وارد کنید');
       return res.redirect("/register");
     }
 
-    const stmt = db.prepare("SELECT * FROM users WHERE email = ?");
-    const user = stmt.get(email);
+    // ✅ Get user - using db.get()
+    const user = await db.get(
+      "SELECT * FROM users WHERE email = ?",
+      [email]
+    );
 
     if (!user) {
       req.flash('error', 'کاربری با این ایمیل یافت نشد');
@@ -128,7 +127,7 @@ router.post("/login", async (req, res) => {
       role: user.role
     };
 
-    //req.flash('success', `خوش آمدید ${user.fullName}!`);
+    req.flash('success', `خوش آمدید ${user.fullName}!`);
     res.redirect("/");
 
   } catch (err) {

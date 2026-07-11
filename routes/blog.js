@@ -1,8 +1,7 @@
+// routes/blog.js
 import { Router } from "express";
 const router = Router();
-
-import { getData , writeData } from "../services/readData.js";
-import { v4 as uuidv4 } from 'uuid';
+import { getData } from "../services/readData.js";
 
 // Helper function to format time
 function timeAgo(date) {
@@ -16,109 +15,74 @@ function timeAgo(date) {
     return new Date(date).toLocaleDateString('fa-IR');
 }
 
+// Blog main page with pagination
 router.get('/', (req, res) => {
-
-    const postsData = getData().posts;
-
+    const data = getData();
+    const allPosts = data.posts || [];
+    
+    // Pagination settings
+    const postsPerPage = 4;
+    const currentPage = parseInt(req.query.page) || 1;
+    const totalPosts = allPosts.length;
+    const totalPages = Math.ceil(totalPosts / postsPerPage);
+    
+    // Get posts for current page
+    const startIndex = (currentPage - 1) * postsPerPage;
+    const endIndex = startIndex + postsPerPage;
+    const posts = allPosts.slice(startIndex, endIndex);
+    
     res.render('blog', {
-            title : 'شبکه وبلاگ',
-            courseCss : false,
-            fontAwesome : false,
-            posts: postsData // taking all of the posts
-    })
+        title: 'شبکه وبلاگ',
+        courseCss: false,
+        fontAwesome: false,
+        posts: posts,
+        currentPage: currentPage,
+        totalPages: totalPages,
+        totalPosts: totalPosts,
+        postsPerPage: postsPerPage
+    });
 });
 
-// Individual blog post page (dynamic based on ID)
+// Individual blog post page
 router.get('/post/:id', (req, res, next) => {
     const data = getData();
-    
     const postId = parseInt(req.params.id);
-    const post = data.posts.find(p => p.id === postId);
+    const post = data.posts ? data.posts.find(p => p.id === postId) : null;
     
-    const recentPosts = data.posts
-    .filter(p => p.id !== post.id) // don't show current post
-    .sort((a, b) => b.id - a.id)   // newest first
-    .slice(0, 4);  
-
-    const comments = data.comments.filter(c => c.postId === postId && !c.parentId);//main comments of this post(replies handled inside the html)
-    
-    if (post) {
-        res.render('blog-detail', { 
-            title: post.title,
-            courseCss: false,
-            fontAwesome: false,
-            post,  // Pass single post to template
-            recentPosts,
-            comments,
-            timeAgo
-        });
-    } else {
+    if (!post) {
         req.notFoundMessage = "پست یافت نشد";
         return next();
     }
+    
+    const recentPosts = data.posts
+        .filter(p => p.id !== post.id)
+        .sort((a, b) => b.id - a.id)
+        .slice(0, 4);
+    
+    const comments = getCommentsWithReplies(postId, data.comments || []);
+    
+    res.render('blog-detail', {
+        title: post.title,
+        courseCss: false,
+        fontAwesome: false,
+        post: post,
+        recentPosts: recentPosts,
+        comments: comments,
+        timeAgo: timeAgo
+    });
 });
 
-// Handle comment submission
-router.post('/post/:id/comment', (req, res) => {
-    const postId = parseInt(req.params.id);
-    const { name, email, content, parentId } = req.body;
+// Helper functions for comments
+function getCommentsWithReplies(postId, allComments) {
+    const postComments = allComments.filter(c => c.postId === postId);
+    const mainComments = postComments.filter(c => !c.parentId);
+    const replies = postComments.filter(c => c.parentId);
     
-    // Validate input
-    if (!name || !content) {
-        req.flash('error', 'لطفاً نام و متن نظر را وارد کنید');
-        return res.redirect(`/blog/post/${postId}`);
-    }
+    mainComments.forEach(comment => {
+        comment.replies = replies.filter(r => r.parentId === comment.id);
+    });
     
-    // Save comment to database
-    const comment = {
-        id: uuidv4(),
-        postId: postId,
-        name: name,
-        email: email,
-        content: content,
-        parentId: parentId || null,
-        avatar: '/assets/img/student.png',
-        createdAt: new Date(),
-        replies: []
-    };
-
-    const data = getData();
-    //Modify the comments array
-    if (!data.comments) 
-    {
-        data.comments = [];
-    }
-
-    if (comment.parentId) {
-        // Find the main comment (returns object, not array)
-        const mainComment = data.comments.find(c => c.id === comment.parentId);
-        
-        // Check if main comment exists
-        if (mainComment) {
-            // Initialize replies array if it doesn't exist
-            if (!mainComment.replies) {
-                mainComment.replies = [];
-            }
-            // Push the reply to the actual main comment
-            mainComment.replies.push(comment);
-        } else {
-            // Handle case where parent comment doesn't exist
-            console.error(`Parent comment ${comment.parentId} not found`);
-            // Optionally: throw error or add as top-level comment
-            comment.parentId = null;
-            data.comments.push(comment);
-        }
-    } else {
-        // No parentId - it's a top-level comment
-        data.comments.push(comment);
-    }
-    
-    // Save the ENTIRE data object back to file
-    writeData(data);  // ← Pass the whole data object!
-    
-    req.flash('success', 'نظر شما با موفقیت ثبت شد');
-    res.redirect(`/blog/post/${postId}#comment-${comment.id}`);
-    
-});
+    return mainComments;
+}
 
 export default router;

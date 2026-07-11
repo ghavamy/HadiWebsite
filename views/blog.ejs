@@ -20,31 +20,67 @@
 <!-- blog grid part here -->
 <section class="blog_posts page_section_padding">
     <div class="container">
+        <!-- Posts Grid -->
         <div class="row justify-content-center">
-            <% posts.forEach((post, index) => { %>
-                <div data-aos="fade-up" data-aos-duration="<%= 1200 + (index * 200) %>" class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
-                    <div class="blog_post_list">
-                        <div class="single_page_blog_post">
-                            <img src="<%= post.image %>" alt="#" class="img-fluid">
-                            <div class="single_blog_content">
-                                <div class="post_author">
-                                    <p><%= post.date %><i class="icon_clock_alt"></i></p>
-                                    <p><%= post.author %><i class="icon_profile"></i></p>
+            <% if (posts && posts.length > 0) { %>
+                <% posts.forEach((post, index) => { %>
+                    <div data-aos="fade-up" data-aos-duration="<%= 1200 + (index * 200) %>" class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+                        <div class="blog_post_list">
+                            <div class="single_page_blog_post">
+                                <img src="<%= post.image %>" alt="#" class="img-fluid">
+                                <div class="single_blog_content">
+                                    <div class="post_author">
+                                        <p><%= post.date %><i class="icon_clock_alt"></i></p>
+                                        <p><%= post.author %><i class="icon_profile"></i></p>
+                                    </div>
+                                    <h2> <a href="/blog/post/<%= post.id %>"><%= post.title %></a> </h2>
+                                    <p><%= post.excerpt ? post.excerpt.substring(0, 150) : '' %>...</p>
+                                    <a href="/blog/post/<%= post.id %>" class="read_more_btn">بیشتر <i class="arrow_left"></i> </a>
                                 </div>
-                                <h2> <a href="/blog/post/<%= post.id %>"><%= post.title %></a> </h2>
-                                <p><%= post.excerpt.substring(0, 150) %>...</p>
-                                <a href="/blog/post/<%= post.id %>" class="read_more_btn">بیشتر <i class="arrow_left"></i> </a>
                             </div>
                         </div>
                     </div>
+                <% }); %>
+            <% } else { %>
+                <div class="col-12 text-center">
+                    <p style="padding: 50px 0; font-size: 18px; color: #666;">هیچ مقاله‌ای یافت نشد</p>
                 </div>
-            <% }); %>
+            <% } %>
         </div>
-        <div data-aos="fade-up" data-aos-duration="2400" class="page_pageination justify-content-start">
-            <a class="current" href="#">1</a>
-            <a href="#">2</a>
-            <a href="#"> <i class="arrow_left"></i></a>
-        </div>
+        
+        <!-- ✅ Pagination -->
+        <% if (totalPages > 1) { %>
+            <div data-aos="fade-up" data-aos-duration="2400" class="page_pageination justify-content-start">
+                <!-- Previous Arrow -->
+                <% if (currentPage > 1) { %>
+                    <a href="?page=<%= currentPage - 1 %>">
+                        <i class="arrow_carrot-left"></i>
+                    </a>
+                <% } else { %>
+                    <a href="#" class="disabled">
+                        <i class="arrow_carrot-left"></i>
+                    </a>
+                <% } %>
+                
+                <!-- Page Numbers -->
+                <% for (let i = 1; i <= totalPages; i++) { %>
+                    <a href="?page=<%= i %>" class="<%= i === currentPage ? 'current' : '' %>">
+                        <%= i %>
+                    </a>
+                <% } %>
+                
+                <!-- Next Arrow -->
+                <% if (currentPage < totalPages) { %>
+                    <a href="?page=<%= currentPage + 1 %>">
+                        <i class="arrow_carrot-right"></i>
+                    </a>
+                <% } else { %>
+                    <a href="#" class="disabled">
+                        <i class="arrow_carrot-right"></i>
+                    </a>
+                <% } %>
+            </div>
+        <% } %>
     </div>
 </section>
 <!-- blog grid part end -->
@@ -61,7 +97,7 @@
             </div>
             <div class="col-lg-4">
                 <div class="cta_btn">
-                    <a href="course-list.html" class="btn_3">شروع کنید</a>
+                    <a href="/course-list" class="btn_3">شروع کنید</a>
                 </div>
             </div>
         </div>

@@ -7,7 +7,7 @@
         </div>
         <div class="header-stats">
             <span class="stat-badge">
-                <i class="fas fa-file-pdf"></i> <%= fileCount %> فایل
+                <i class="fas fa-file-pdf"></i> <%= fileCount || 0 %> فایل
             </span>
             <span class="stat-badge">
                 <i class="fas fa-download"></i> قابل دانلود
@@ -17,228 +17,75 @@
 
     <!-- Tabs -->
     <div class="pdf-tabs-modern">
-        <button class="tab-btn-modern active" data-tab="experimental">
-            <i class="fas fa-flask"></i>
-            <span>تجربی</span>
-            <span class="tab-count"><%= pdfCourse.experimental.sections.reduce((sum, s) => sum + s.lessons.length, 0) %></span>
-        </button>
-        <button class="tab-btn-modern" data-tab="math">
-            <i class="fas fa-square-root-variable"></i>
-            <span>ریاضی</span>
-            <span class="tab-count"><%= pdfCourse.math.sections.reduce((sum, s) => sum + s.lessons.length, 0) %></span>
-        </button>
-        <button class="tab-btn-modern" data-tab="humanities">
-            <i class="fas fa-book-open"></i>
-            <span>انسانی</span>
-            <span class="tab-count"><%= pdfCourse.humanities.sections.reduce((sum, s) => sum + s.lessons.length, 0) %></span>
-        </button>
-        <button class="tab-btn-modern" data-tab="language">
-            <i class="fas fa-language"></i>
-            <span>زبان</span>
-            <span class="tab-count"><%= pdfCourse.language.sections.reduce((sum, s) => sum + s.lessons.length, 0) %></span>
-        </button>
+        <% subjects.forEach((subject, index) => { %>
+            <button class="tab-btn-modern <%= index === 0 ? 'active' : '' %>" data-tab="<%= subject %>">
+                <i class="fas <%= examsData[subject].icon %>"></i>
+                <span><%= examsData[subject].name %></span>
+                <span class="tab-count">
+                    <%= examsData[subject].sections.reduce((sum, s) => sum + s.lessons.length, 0) %>
+                </span>
+            </button>
+        <% }) %>
     </div>
 
     <!-- Tab Content -->
     <div class="pdf-tab-content">
-        <!-- تجربی -->
-        <div class="pdf-tab-panel active" id="panel-experimental">
-            <% pdfCourse.experimental.sections.forEach((section, sectionIndex) => { %>
-                <div class="pdf-section">
-                    <div class="pdf-section-header" onclick="toggleSection(this)">
-                        <div class="section-info">
-                            <span class="section-number"><%= sectionIndex + 1 %></span>
-                            <div>
-                                <h3><%= section.title %></h3>
-                                <p><%= section.description %></p>
-                            </div>
-                        </div>
-                        <div class="section-meta">
-                            <span class="lesson-count"><%= section.lessons.length %> درس</span>
-                            <i class="fas fa-chevron-down toggle-icon"></i>
-                        </div>
-                    </div>
-                    <div class="pdf-section-body">
-                        <% section.lessons.forEach((lesson, lessonIndex) => { %>
-                            <div class="pdf-lesson-item">
-                                <div class="lesson-info">
-                                    <span class="lesson-number"><%= lessonIndex + 1 %></span>
-                                    <div class="lesson-details">
-                                        <h4><%= lesson.title %></h4>
-                                        <span class="lesson-badge">
-                                            <i class="fas fa-file-pdf"></i> سال <%= lesson.year %>
-                                        </span>
+        <% subjects.forEach((subject, index) => { %>
+            <div class="pdf-tab-panel <%= index === 0 ? 'active' : '' %>" id="panel-<%= subject %>">
+                <% const subjectData = examsData[subject]; %>
+                <% if (subjectData.sections && subjectData.sections.length > 0) { %>
+                    <% subjectData.sections.forEach((section, sectionIndex) => { %>
+                        <div class="pdf-section">
+                            <div class="pdf-section-header" onclick="toggleSection(this)">
+                                <div class="section-info">
+                                    <span class="section-number"><%= sectionIndex + 1 %></span>
+                                    <div>
+                                        <h3><%= section.title %></h3>
+                                        <p><%= section.description || 'آزمون' %></p>
                                     </div>
                                 </div>
-                                <div class="lesson-actions">
-                                    <% if (lesson.video) { %>
-                                        <a href="/course/<%= pdfCourse.slug %>/lesson/<%= lesson.session %>" class="btn-watch">
-                                            <i class="fas fa-play"></i> تماشا
-                                        </a>
-                                    <% } %>
-                                    <% if (lesson.pdf) { %>
-                                        <a href="/download/pdf/<%= lesson.pdf %>" class="btn-download-pdf" download>
-                                            <i class="fas fa-file-pdf"></i> دانلود آزمون
-                                            <!-- <span class="download-size">2.4 MB</span> -->
-                                        </a>
-                                        <a href="/download/pdf/<%= lesson.answer %>" class="btn-download-pdf" download>
-                                            <i class="fas fa-file-pdf"></i> دانلود پاسخ تشریحی
-                                            <!-- <span class="download-size">2.4 MB</span> -->
-                                        </a>
-                                    <% } %>
+                                <div class="section-meta">
+                                    <span class="lesson-count"><%= section.lessons.length %> آزمون</span>
+                                    <i class="fas fa-chevron-down toggle-icon"></i>
                                 </div>
                             </div>
-                        <% }) %>
-                    </div>
-                </div>
-            <% }) %>
-        </div>
-
-        <!-- ریاضی -->
-        <div class="pdf-tab-panel" id="panel-math">
-            <% pdfCourse.math.sections.forEach((section, sectionIndex) => { %>
-                <div class="pdf-section">
-                    <div class="pdf-section-header" onclick="toggleSection(this)">
-                        <div class="section-info">
-                            <span class="section-number"><%= sectionIndex + 1 %></span>
-                            <div>
-                                <h3><%= section.title %></h3>
-                                <p><%= section.description %></p>
-                            </div>
-                        </div>
-                        <div class="section-meta">
-                            <span class="lesson-count"><%= section.lessons.length %> درس</span>
-                            <i class="fas fa-chevron-down toggle-icon"></i>
-                        </div>
-                    </div>
-                    <div class="pdf-section-body">
-                        <% section.lessons.forEach((lesson, lessonIndex) => { %>
-                            <div class="pdf-lesson-item">
-                                <div class="lesson-info">
-                                    <span class="lesson-number"><%= lessonIndex + 1 %></span>
-                                    <div class="lesson-details">
-                                        <h4><%= lesson.title %></h4>
-                                        <span class="lesson-badge">
-                                            <i class="fas fa-video"></i> جلسه <%= lesson.session %>
-                                        </span>
+                            <div class="pdf-section-body">
+                                <% section.lessons.forEach((lesson, lessonIndex) => { %>
+                                    <div class="pdf-lesson-item">
+                                        <div class="lesson-info">
+                                            <span class="lesson-number"><%= lessonIndex + 1 %></span>
+                                            <div class="lesson-details">
+                                                <h4><%= lesson.title %></h4>
+                                                <span class="lesson-badge">
+                                                    <i class="fas fa-calendar-alt"></i> سال <%= lesson.year %>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="lesson-actions">
+                                            <% if (lesson.pdf) { %>
+                                                <a href="/download/pdf/<%= lesson.pdf %>" class="btn-download-pdf" download>
+                                                    <i class="fas fa-file-pdf"></i> دانلود آزمون
+                                                </a>
+                                            <% } %>
+                                            <% if (lesson.answer) { %>
+                                                <a href="/download/pdf/<%= lesson.answer %>" class="btn-download-pdf" download>
+                                                    <i class="fas fa-file-pdf"></i> دانلود پاسخ تشریحی
+                                                </a>
+                                            <% } %>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="lesson-actions">
-                                    <% if (lesson.video) { %>
-                                        <a href="/course/<%= pdfCourse.slug %>/lesson/<%= lesson.session %>" class="btn-watch">
-                                            <i class="fas fa-play"></i> تماشا
-                                        </a>
-                                    <% } %>
-                                    <% if (lesson.pdf) { %>
-                                        <a href="/download/pdf/<%= lesson.pdf %>" class="btn-download-pdf" download>
-                                            <i class="fas fa-file-pdf"></i> دانلود PDF
-                                            <span class="download-size">2.4 MB</span>
-                                        </a>
-                                    <% } %>
-                                </div>
-                            </div>
-                        <% }) %>
-                    </div>
-                </div>
-            <% }) %>
-        </div>
-
-        <!-- انسانی -->
-        <div class="pdf-tab-panel" id="panel-humanities">
-            <% pdfCourse.humanities.sections.forEach((section, sectionIndex) => { %>
-                <div class="pdf-section">
-                    <div class="pdf-section-header" onclick="toggleSection(this)">
-                        <div class="section-info">
-                            <span class="section-number"><%= sectionIndex + 1 %></span>
-                            <div>
-                                <h3><%= section.title %></h3>
-                                <p><%= section.description %></p>
+                                <% }) %>
                             </div>
                         </div>
-                        <div class="section-meta">
-                            <span class="lesson-count"><%= section.lessons.length %> درس</span>
-                            <i class="fas fa-chevron-down toggle-icon"></i>
-                        </div>
+                    <% }) %>
+                <% } else { %>
+                    <div class="pdf-empty-state">
+                        <i class="fas fa-file-pdf"></i>
+                        <h3>هیچ فایل PDFی یافت نشد</h3>
+                        <p>هنوز فایل‌های PDF برای این بخش اضافه نشده است.</p>
                     </div>
-                    <div class="pdf-section-body">
-                        <% section.lessons.forEach((lesson, lessonIndex) => { %>
-                            <div class="pdf-lesson-item">
-                                <div class="lesson-info">
-                                    <span class="lesson-number"><%= lessonIndex + 1 %></span>
-                                    <div class="lesson-details">
-                                        <h4><%= lesson.title %></h4>
-                                        <span class="lesson-badge">
-                                            <i class="fas fa-video"></i> جلسه <%= lesson.session %>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="lesson-actions">
-                                    <% if (lesson.video) { %>
-                                        <a href="/course/<%= pdfCourse.slug %>/lesson/<%= lesson.session %>" class="btn-watch">
-                                            <i class="fas fa-play"></i> تماشا
-                                        </a>
-                                    <% } %>
-                                    <% if (lesson.pdf) { %>
-                                        <a href="/download/pdf/<%= lesson.pdf %>" class="btn-download-pdf" download>
-                                            <i class="fas fa-file-pdf"></i> دانلود PDF
-                                            <span class="download-size">2.4 MB</span>
-                                        </a>
-                                    <% } %>
-                                </div>
-                            </div>
-                        <% }) %>
-                    </div>
-                </div>
-            <% }) %>
-        </div>
-
-        <!-- زبان -->
-        <div class="pdf-tab-panel" id="panel-language">
-            <% pdfCourse.language.sections.forEach((section, sectionIndex) => { %>
-                <div class="pdf-section">
-                    <div class="pdf-section-header" onclick="toggleSection(this)">
-                        <div class="section-info">
-                            <span class="section-number"><%= sectionIndex + 1 %></span>
-                            <div>
-                                <h3><%= section.title %></h3>
-                                <p><%= section.description %></p>
-                            </div>
-                        </div>
-                        <div class="section-meta">
-                            <span class="lesson-count"><%= section.lessons.length %> درس</span>
-                            <i class="fas fa-chevron-down toggle-icon"></i>
-                        </div>
-                    </div>
-                    <div class="pdf-section-body">
-                        <% section.lessons.forEach((lesson, lessonIndex) => { %>
-                            <div class="pdf-lesson-item">
-                                <div class="lesson-info">
-                                    <span class="lesson-number"><%= lessonIndex + 1 %></span>
-                                    <div class="lesson-details">
-                                        <h4><%= lesson.title %></h4>
-                                        <span class="lesson-badge">
-                                            <i class="fas fa-video"></i> جلسه <%= lesson.session %>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="lesson-actions">
-                                    <% if (lesson.video) { %>
-                                        <a href="/course/<%= pdfCourse.slug %>/lesson/<%= lesson.session %>" class="btn-watch">
-                                            <i class="fas fa-play"></i> تماشا
-                                        </a>
-                                    <% } %>
-                                    <% if (lesson.pdf) { %>
-                                        <a href="/download/pdf/<%= lesson.pdf %>" class="btn-download-pdf" download>
-                                            <i class="fas fa-file-pdf"></i> دانلود PDF
-                                            <span class="download-size">2.4 MB</span>
-                                        </a>
-                                    <% } %>
-                                </div>
-                            </div>
-                        <% }) %>
-                    </div>
-                </div>
-            <% }) %>
-        </div>
+                <% } %>
+            </div>
+        <% }) %>
     </div>
 </div>
