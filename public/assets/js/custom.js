@@ -365,7 +365,7 @@
 
     });
 
-     // ===== TAB SWITCHING =====
+    // ===== TAB SWITCHING =====
     $(".tab-btn").on("click", function () {
 
         let index = $(this).index();
@@ -377,6 +377,13 @@
         // show correct form
         $(".auth-form").removeClass("active");
         $(".auth-form").eq(index).addClass("active");
+    });
+
+    // ===== EXAM TAB SWITCHING =====
+    $(".exam-tab-btn").on("click", function () {
+        const type = this.dataset.type;
+        // Redirect to same page with type parameter
+        window.location.href = `/download/testExams?type=${encodeURIComponent(type)}`;
     });
 
 

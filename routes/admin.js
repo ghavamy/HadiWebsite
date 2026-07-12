@@ -40,7 +40,7 @@ const upload = multer({
 });
 
 // Helper function to create safe filename
-function createSafeFilename(title, grade, subject, type) {
+function createSafeFilename(examType, title, grade, subject, type) {
     const maxTitleLength = 50;
     let safeTitle = title.replace(/[\/\\:*?"<>|]/g, '');
     if (safeTitle.length > maxTitleLength) {
@@ -54,7 +54,7 @@ function createSafeFilename(title, grade, subject, type) {
         language: 'زبان'
     };
     const subjectName = subjectMap[subject] || subject;
-    return `${safeTitle} - ${safeGrade} - ${subjectName} - ${type}.pdf`;
+    return `${examType} - ${safeTitle} - ${safeGrade} - ${subjectName} - ${type}.pdf`;
 }
 
 // Admin page - ✅ Read from database
@@ -105,7 +105,8 @@ router.get('/', async (req, res) => {
                 year: exam.year,
                 title: exam.title,
                 pdf: exam.pdf_path,
-                answer: exam.answer_path
+                answer: exam.answer_path,
+                type: exam.type || 'قلم چی'  // ✅ Added type
             });
         });
         
@@ -135,22 +136,23 @@ router.get('/', async (req, res) => {
     }
 });
 
-// Add exam - ✅ Save to database
+// Add exam - ✅ Save to database with type
 router.post('/add', upload.fields([
     { name: 'pdfFile', maxCount: 1 },
     { name: 'answerFile', maxCount: 1 }
 ]), async (req, res) => {
     try {
-        const { subject, grade, year, title } = req.body;
+        // ✅ Added type to destructuring
+        const { type, subject, grade, year, title } = req.body;
         const pdfFile = req.files['pdfFile'] ? req.files['pdfFile'][0] : null;
         const answerFile = req.files['answerFile'] ? req.files['answerFile'][0] : null;
         
-        if (!subject || !grade || !year || !title || !pdfFile) {
+        if (!type || !subject || !grade || !year || !title || !pdfFile) {
             return res.redirect('/admin?error=لطفاً تمام فیلدهای الزامی را پر کنید');
         }
         
         // Create meaningful filenames
-        const pdfNewName = createSafeFilename(title, grade, subject, 'سوال');
+        const pdfNewName = createSafeFilename(type, title, grade, subject, 'سوال');
         const pdfOldPath = path.join(uploadPath, pdfFile.filename);
         const pdfNewPath = path.join(uploadPath, pdfNewName);
         
@@ -163,7 +165,7 @@ router.post('/add', upload.fields([
         
         let answerNewName = null;
         if (answerFile) {
-            answerNewName = createSafeFilename(title, grade, subject, 'پاسخ');
+            answerNewName = createSafeFilename(type, title, grade, subject, 'پاسخ');
             const answerOldPath = path.join(uploadPath, answerFile.filename);
             const answerNewPath = path.join(uploadPath, answerNewName);
             if (fs.existsSync(answerOldPath)) {
@@ -171,12 +173,12 @@ router.post('/add', upload.fields([
             }
         }
         
-        // ✅ Save to database
+        // ✅ Save to database with type
         const db = await getDb();
         await db.run(
-            `INSERT INTO pdf_exams (subject, grade, year, title, pdf_path, answer_path) 
-             VALUES (?, ?, ?, ?, ?, ?)`,
-            [subject, grade, parseInt(year), title, pdfNewName, answerNewName]
+            `INSERT INTO pdf_exams (type, subject, grade, year, title, pdf_path, answer_path) 
+             VALUES (?, ?, ?, ?, ?, ?, ?)`,
+            [type, subject, grade, parseInt(year), title, pdfNewName, answerNewName]
         );
         
         res.redirect('/admin?success=آزمون با موفقیت اضافه شد');

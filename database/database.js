@@ -40,6 +40,7 @@ export async function createAllTables() {
     await db.exec(`
         CREATE TABLE IF NOT EXISTS pdf_exams (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            type TEXT DEFAULT 'قلم چی',
             subject TEXT NOT NULL,
             grade TEXT NOT NULL,
             year INTEGER NOT NULL,

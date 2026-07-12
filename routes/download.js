@@ -9,23 +9,58 @@ const router = Router();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// ✅ Get PDF exams from database
-async function getPDFExams() {
+// ✅ Get PDF exams from database (with optional type filter)
+async function getPDFExams(type = null) {
     const db = await getDb();
-    const exams = await db.all('SELECT * FROM pdf_exams ORDER BY year DESC, grade ASC');
+    let query = 'SELECT * FROM pdf_exams ORDER BY year DESC, grade ASC';
+    const params = [];
+    
+    if (type) {
+        query = 'SELECT * FROM pdf_exams WHERE type = ? ORDER BY year DESC, grade ASC';
+        params.push(type);
+    }
+    
+    const exams = await db.all(query, params);
     return exams;
 }
 
-// ✅ Count PDF files from database
-async function countPDFFiles() {
+// ✅ Count PDF files from database (with optional type filter)
+async function countPDFFiles(type = null) {
     const db = await getDb();
-    const result = await db.get('SELECT COUNT(*) as count FROM pdf_exams');
+    let query = 'SELECT COUNT(*) as count FROM pdf_exams';
+    const params = [];
+    
+    if (type) {
+        query = 'SELECT COUNT(*) as count FROM pdf_exams WHERE type = ?';
+        params.push(type);
+    }
+    
+    const result = await db.get(query, params);
     return result ? result.count : 0;
 }
 
-// ✅ Group PDF exams by subject
-async function getPDFExamsGrouped() {
-    const exams = await getPDFExams();
+// ✅ Get counts per type
+async function getTypeCounts() {
+    const db = await getDb();
+    const result = await db.all('SELECT type, COUNT(*) as count FROM pdf_exams GROUP BY type');
+    const counts = {
+        'ماز': 0,
+        'قلم چی': 0
+    };
+    
+    result.forEach(row => {
+        const type = row.type || 'قلم چی';
+        if (counts[type] !== undefined) {
+            counts[type] = row.count;
+        }
+    });
+    
+    return counts;
+}
+
+// ✅ Group PDF exams by subject (with optional type filter)
+async function getPDFExamsGrouped(type = null) {
+    const exams = await getPDFExams(type);
     const grouped = {};
     
     exams.forEach(exam => {
@@ -41,7 +76,7 @@ async function getPDFExamsGrouped() {
     return grouped;
 }
 
-// Download PDF - Main route (✅ No changes needed here - still serves files)
+// Download PDF - Main route
 router.get('/pdf/:filename', (req, res) => {
     try {
         const filename = req.params.filename;
@@ -67,11 +102,16 @@ router.get('/pdf/:filename', (req, res) => {
     }
 });
 
-// ✅ TestExams page - Get data from database
+// ✅ TestExams page - Get data from database with type filtering
 router.get('/testExams', async (req, res) => {
     try {
-        const groupedExams = await getPDFExamsGrouped();
-        const totalExams = await countPDFFiles();
+        // Get type from query parameter (default to 'قلم چی')
+        const type = req.query.type || 'قلم چی';
+        
+        // Get data filtered by type
+        const groupedExams = await getPDFExamsGrouped(type);
+        const totalExams = await countPDFFiles(type);
+        const typeCounts = await getTypeCounts();
         
         const subjects = ['experimental', 'math', 'humanities', 'language'];
         const subjectNames = {
@@ -104,7 +144,8 @@ router.get('/testExams', async (req, res) => {
                         year: exam.year,
                         title: exam.title,
                         pdf: exam.pdf_path,
-                        answer: exam.answer_path
+                        answer: exam.answer_path,
+                        type: exam.type || 'قلم چی'
                     }));
                     
                     examsData[subject].sections.push({
@@ -126,7 +167,9 @@ router.get('/testExams', async (req, res) => {
             subjectNames: subjectNames,
             fileCount: totalExams,
             pdfCounts: {}, // You can implement per-subject counts
-            totalLessons: totalExams
+            totalLessons: totalExams,
+            currentType: type,  // ✅ Pass current type to view
+            typeCounts: typeCounts  // ✅ Pass type counts to view
         });
         
     } catch (error) {
@@ -141,6 +184,8 @@ router.get('/testExams', async (req, res) => {
             fileCount: 0,
             pdfCounts: {},
             totalLessons: 0,
+            currentType: 'قلم چی',
+            typeCounts: { 'ماز': 0, 'قلم چی': 0 },
             error: 'خطا در بارگذاری آزمون‌ها'
         });
     }

@@ -7143,6 +7143,91 @@ html[dir="rtl"] .lp-archive-courses .course-summary {
   color: #fff;
 }
 
+/*===== EXAM ====== */
+.exam-tabs {
+    display: flex;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 6px;
+    border-radius: 50px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.exam-tab-btn {
+    padding: 10px 30px;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.7);
+    border: none;
+    border-radius: 40px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    letter-spacing: 0.5px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.exam-tab-btn:hover {
+    color: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.exam-tab-btn.active {
+    background: white;
+    color: #4a6cf7;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+.exam-tab-btn.active:hover {
+    background: white;
+    color: #4a6cf7;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.exam-tab-btn .tab-count {
+    background: rgba(0, 0, 0, 0.1);
+    padding: 1px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.exam-tab-btn.active .tab-count {
+    background: rgba(74, 108, 247, 0.15);
+    color: #4a6cf7;
+}
+
+@media (max-width: 768px) {
+    .exam-tabs {
+        padding: 4px;
+        gap: 6px;
+        border-radius: 30px;
+    }
+    
+    .exam-tab-btn {
+        padding: 8px 20px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .exam-tab-btn {
+        padding: 6px 14px;
+        font-size: 12px;
+    }
+    
+    .exam-tabs {
+        border-radius: 20px;
+    }
+}
+
+
 /* ===== FORMS ===== */
 .auth-form {
   display: none;

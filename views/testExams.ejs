@@ -5,6 +5,17 @@
             <h2><i class="fas fa-graduation-cap"></i> آزمون های آزمایشی</h2>
             <p>دانلود فایل‌های PDF آزمون مختلف</p>
         </div>
+        <!-- ✅ Type TABS -->
+        <div class="exam-tabs">
+            <button class="exam-tab-btn <%= currentType === 'ماز' ? 'active' : '' %>" data-type="ماز">
+                ماز
+                <span class="tab-count"><%= typeCounts && typeCounts['ماز'] ? typeCounts['ماز'] : 0 %></span>
+            </button>
+            <button class="exam-tab-btn <%= currentType === 'قلم چی' ? 'active' : '' %>" data-type="قلم چی">
+                قلم چی
+                <span class="tab-count"><%= typeCounts && typeCounts['قلم چی'] ? typeCounts['قلم چی'] : 0 %></span>
+            </button>
+        </div>
         <div class="header-stats">
             <span class="stat-badge">
                 <i class="fas fa-file-pdf"></i> <%= fileCount || 0 %> فایل
@@ -15,7 +26,7 @@
         </div>
     </div>
 
-    <!-- Tabs -->
+    <!-- Subject Tabs -->
     <div class="pdf-tabs-modern">
         <% subjects.forEach((subject, index) => { %>
             <button class="tab-btn-modern <%= index === 0 ? 'active' : '' %>" data-tab="<%= subject %>">
