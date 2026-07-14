@@ -1,6 +1,6 @@
 // routes/admin.js
 import { Router } from "express";
-import { getDb } from "../database/database.js";
+import { getDb } from "../../database/database.js";
 import multer from "multer";
 import path from "path";
 import { fileURLToPath } from 'url';
@@ -9,7 +9,7 @@ import fs from 'fs';
 const router = Router();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const uploadPath = path.join(__dirname, '../public/assets/pdf');
+const uploadPath = path.join(__dirname, '../../public/assets/pdf');
 
 
 // Configure multer for file upload
@@ -57,11 +57,16 @@ function createSafeFilename(examType, title, grade, subject, type) {
     return `${examType} - ${safeTitle} - ${safeGrade} - ${subjectName} - ${type}.pdf`;
 }
 
+router.get('/', (req, res) => {
+    res.redirect('/admin/exams');
+});
+
 // Admin page - ✅ Read from database
-router.get('/', async (req, res) => {
+router.get('/exams', async (req, res) => {
     try {
         const db = await getDb();
         const exams = await db.all('SELECT * FROM pdf_exams ORDER BY year DESC, grade ASC');
+        const examsCount = await db.all('SELECT COUNT(*) as count FROM pdf_exams');
         
         const subjects = ['experimental', 'math', 'humanities', 'language'];
         const subjectNames = {
@@ -120,9 +125,11 @@ router.get('/', async (req, res) => {
             });
         });
         
-        res.render('admin', {
+        res.render('adminExams', {
             title: 'مدیریت آزمون‌ها',
-            layout: false,
+            layout: 'layouts/admin',
+            currentPage: 'exams',
+            fileCount: examsCount.count,
             subjects: subjects,
             examsData: examsData,
             subjectNames: subjectNames,
@@ -132,15 +139,15 @@ router.get('/', async (req, res) => {
         
     } catch (error) {
         console.error('Admin page error:', error);
-        res.redirect('/admin?error=خطا در بارگذاری صفحه');
+        res.redirect('/admin/exams?error=خطا در بارگذاری صفحه');
     }
 });
 
 // Add exam - ✅ Save to database with type
-router.post('/add', upload.fields([
-    { name: 'pdfFile', maxCount: 1 },
-    { name: 'answerFile', maxCount: 1 }
-]), async (req, res) => {
+router.post('/add/exam', upload.fields([
+        { name: 'pdfFile', maxCount: 1 },
+        { name: 'answerFile', maxCount: 1 }
+    ]), async (req, res) => {
     try {
         // ✅ Added type to destructuring
         const { type, subject, grade, year, title } = req.body;
@@ -148,7 +155,7 @@ router.post('/add', upload.fields([
         const answerFile = req.files['answerFile'] ? req.files['answerFile'][0] : null;
         
         if (!type || !subject || !grade || !year || !title || !pdfFile) {
-            return res.redirect('/admin?error=لطفاً تمام فیلدهای الزامی را پر کنید');
+            return res.redirect('/admin/exams?error=لطفاً تمام فیلدهای الزامی را پر کنید');
         }
         
         // Create meaningful filenames
@@ -160,7 +167,7 @@ router.post('/add', upload.fields([
         if (fs.existsSync(pdfOldPath)) {
             fs.renameSync(pdfOldPath, pdfNewPath);
         } else {
-            return res.redirect('/admin?error=خطا در آپلود فایل');
+            return res.redirect('/admin/exams?error=خطا در آپلود فایل');
         }
         
         let answerNewName = null;
@@ -181,16 +188,16 @@ router.post('/add', upload.fields([
             [type, subject, grade, parseInt(year), title, pdfNewName, answerNewName]
         );
         
-        res.redirect('/admin?success=آزمون با موفقیت اضافه شد');
+        res.redirect('/admin/exams?success=آزمون با موفقیت اضافه شد');
         
     } catch (error) {
         console.error('Add exam error:', error);
-        res.redirect('/admin?error=خطا در افزودن آزمون');
+        res.redirect('/admin/exams?error=خطا در افزودن آزمون');
     }
 });
 
 // Delete exam - ✅ Delete from database
-router.get('/delete/:id', async (req, res) => {
+router.get('/delete/exam/:id', async (req, res) => {
     try {
         const examId = parseInt(req.params.id);
         const db = await getDb();
@@ -199,7 +206,7 @@ router.get('/delete/:id', async (req, res) => {
         const exam = await db.get('SELECT * FROM pdf_exams WHERE id = ?', examId);
         
         if (!exam) {
-            return res.redirect('/admin?error=آزمون یافت نشد');
+            return res.redirect('/admin/exams?error=آزمون یافت نشد');
         }
         
         // Delete PDF files from disk
@@ -219,11 +226,11 @@ router.get('/delete/:id', async (req, res) => {
         // ✅ Delete from database
         await db.run('DELETE FROM pdf_exams WHERE id = ?', examId);
         
-        res.redirect('/admin?success=آزمون با موفقیت حذف شد');
+        res.redirect('/admin/exams?success=آزمون با موفقیت حذف شد');
         
     } catch (error) {
         console.error('Delete exam error:', error);
-        res.redirect('/admin?error=خطا در حذف آزمون');
+        res.redirect('/admin/exams?error=خطا در حذف آزمون');
     }
 });
 
@@ -261,11 +268,11 @@ router.get('/delete-section/:subject/:grade', async (req, res) => {
             [subject, grade]
         );
         
-        res.redirect('/admin?success=بخش با موفقیت حذف شد');
+        res.redirect('/admin/exams?success=بخش با موفقیت حذف شد');
         
     } catch (error) {
         console.error('Delete section error:', error);
-        res.redirect('/admin?error=خطا در حذف بخش');
+        res.redirect('/admin/exams?error=خطا در حذف بخش');
     }
 });
 

@@ -8,7 +8,8 @@ import fs from 'fs';
 //routes
 import registerRoutes from "./routes/register.js";
 import downloadRoutes from "./routes/download.js";
-import adminRoutes from "./routes/admin.js";
+import adminExamRoutes from "./routes/admin/adminExam.js";
+import adminBlogRoutes from "./routes/admin/adminBlog.js";
 import courseRoutes from "./routes/course.js";
 import blogRoutes from "./routes/blog.js";
 
@@ -37,7 +38,6 @@ app.use(flash());
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 
-// THIS ONE LINE does everything!
 // It serves ALL files from the 'public' folder
 app.use(express.static(join(__dirname, 'public')));
 
@@ -78,10 +78,10 @@ const pages = [
     { path: '/event',         view: 'event',         title: 'رویداد ها'},
     { path: '/testimonial',   view: 'testimonial',   title: 'گواهینامه'},
     { path: '/live-class',    view: 'live-class',    title: 'وبینار'},
-    { path: '/register',      view: 'register',      title: 'ثبت نام',                 courseCss : true, fontAwesome : true},
-    { path: '/profile',       view: 'profile',       title: 'پنل کاربری',              courseCss : true, fontAwesome : true},
-    { path: '/checkout',      view: 'checkout',      title: 'خرید' ,                   courseCss : true,  fontAwesome : true},
-    { path: '/quizzes',       view: 'quizzes',       title: 'آزمون های آنلاین' ,        courseCss : true, fontAwesome : true}
+    { path: '/register',      view: 'register',      title: 'ثبت نام',                  courseCss : true, fontAwesome : true},
+    { path: '/profile',       view: 'profile',       title: 'پنل کاربری',               courseCss : true, fontAwesome : true},
+    { path: '/checkout',      view: 'checkout',      title: 'خرید' ,                    courseCss : true,  fontAwesome : true},
+    { path: '/quizzes',       view: 'quizzes',       title: 'آزمون های آنلاین' ,        courseCss : true, fontAwesome : true},
 ];
 
 pages.forEach(page => {
@@ -92,8 +92,6 @@ pages.forEach(page => {
 
         // Set defaults for missing properties
         renderData.title = renderData.title || 'وبلاگ آموزشی';
-        renderData.courseCss = renderData.courseCss || false;
-        renderData.fontAwesome = renderData.fontAwesome || false;
         
         // Pass all remaining properties to render
         res.render(view, renderData);
@@ -106,16 +104,15 @@ app.use("/blog", blogRoutes);
 app.use("/course", courseRoutes);
 app.use("/register", registerRoutes);
 app.use("/download", downloadRoutes);
-app.use("/admin", adminRoutes);
+app.use("/admin", adminExamRoutes);
+app.use("/admin", adminBlogRoutes);
 
 app.get('/', (req, res) => {
     const data = getData();
     res.render('index', {
         title: 'خانه',
         instructors: data.instructors || [],
-        courses: data.courses || [],
-        courseCss: false,
-        fontAwesome: false
+        courses: data.courses || []
     });
 });
 
@@ -123,9 +120,7 @@ app.get('/instructor', (req, res) => {
     const data = getData();
     res.render('instructors', {
         title: 'آموزگار',
-        instructors: data.instructors || [],
-        courseCss: false,
-        fontAwesome: false
+        instructors: data.instructors || []
     });
 });
 

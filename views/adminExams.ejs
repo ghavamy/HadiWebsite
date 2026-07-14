@@ -1,0 +1,138 @@
+<!-- Header -->
+<div class="header">
+    <h1><i class="fas fa-file-pdf"></i> مدیریت آزمون‌ها</h1>
+</div>
+
+<!-- Alerts -->
+<% if (typeof error !== 'undefined' && error) { %>
+    <div class="alert alert-danger"><%= error %></div>
+<% } %>
+<% if (typeof success !== 'undefined' && success) { %>
+    <div class="alert alert-success"><%= success %></div>
+<% } %>
+
+<!-- Add Form -->
+<div class="add-form">
+    <h3><i class="fas fa-plus-circle"></i> افزودن آزمون جدید</h3>
+    <form action="/admin/add/exam" method="POST" enctype="multipart/form-data">
+        <div class="form-row">
+            <div class="form-group">
+                <label>نوع آزمون *</label>
+                <select name="type" required>
+                    <option value="">انتخاب...</option>
+                    <option value="قلم چی">قلم چی</option>
+                    <option value="ماز">ماز</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>رشته *</label>
+                <select name="subject" required>
+                    <option value="">انتخاب...</option>
+                    <option value="experimental">تجربی</option>
+                    <option value="math">ریاضی</option>
+                    <option value="humanities">انسانی</option>
+                    <option value="language">زبان</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>پایه *</label>
+                <select name="grade" required>
+                    <option value="">انتخاب...</option>
+                    <option value="دهم">دهم</option>
+                    <option value="یازدهم">یازدهم</option>
+                    <option value="دوازدهم">دوازدهم</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>سال *</label>
+                <input type="number" name="year" placeholder="1404" required>
+            </div>
+            <div class="form-group">
+                <label>عنوان آزمون *</label>
+                <input type="text" name="title" placeholder="مثلاً 4 مهر 1404" required>
+            </div>
+            <div class="form-group">
+                <label>فایل سوال (PDF) *</label>
+                <input type="file" name="pdfFile" accept=".pdf" required>
+            </div>
+            <div class="form-group">
+                <label>فایل پاسخ (PDF)</label>
+                <input type="file" name="answerFile" accept=".pdf">
+            </div>
+            <button type="submit" class="btn-add"><i class="fas fa-plus"></i> افزودن</button>
+        </div>
+    </form>
+</div>
+
+<!-- Exams List -->
+<div class="exams-list">
+    <div class="tabs">
+        <% subjects.forEach((subject, index) => { %>
+            <button class="tab <%= index === 0 ? 'active' : '' %>" data-subject="<%= subject %>">
+                <i class="fas <%= examsData[subject].icon %>"></i>
+                <%= examsData[subject].name %>
+                <span class="count">
+                    <%= examsData[subject].sections.reduce((sum, s) => sum + s.lessons.length, 0) %>
+                </span>
+            </button>
+        <% }) %>
+    </div>
+    
+    <% subjects.forEach((subject, index) => { %>
+        <div class="panel <%= index === 0 ? 'active' : '' %>" id="panel-<%= subject %>">
+            <% const data = examsData[subject]; %>
+            <% if (data.sections && data.sections.length > 0) { %>
+                <% data.sections.forEach((section) => { %>
+                    <div class="section">
+                        <div class="section-header" onclick="toggleSection(this)">
+                            <h4><%= section.title %></h4>
+                            <div class="meta">
+                                <span><%= section.lessons.length %> آزمون</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                        </div>
+                        <div class="section-body">
+                            <% section.lessons.forEach((lesson) => { %>
+                                <div class="exam">
+                                    <div class="exam-info">
+                                        <span class="type-badge <%= lesson.type === 'ماز' ? 'maz' : 'ghalamchi' %>">
+                                            <%= lesson.type || 'قلم چی' %>
+                                        </span>
+                                        <span class="year"><%= lesson.year %></span>
+                                        <span class="title"><%= lesson.title %></span>
+                                        <div class="files">
+                                            <% if (lesson.pdf) { %>
+                                                <a href="/download/pdf/<%= lesson.pdf %>" target="_blank">
+                                                    <i class="fas fa-file-pdf"></i> سوال
+                                                </a>
+                                            <% } else { %>
+                                                <span class="no-file">بدون سوال</span>
+                                            <% } %>
+                                            <% if (lesson.answer) { %>
+                                                <a href="/download/pdf/<%= lesson.answer %>" target="_blank">
+                                                    <i class="fas fa-file-pdf"></i> پاسخ
+                                                </a>
+                                            <% } else { %>
+                                                <span class="no-file">بدون پاسخ</span>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                    <a href="/admin/delete/exam/<%= lesson.id %>" 
+                                        class="delete-btn" 
+                                        onclick="return confirm('حذف این آزمون؟')">
+                                        <i class="fas fa-times"></i>
+                                    </a>
+                                </div>
+                            <% }) %>
+                        </div>
+                    </div>
+                <% }) %>
+            <% } else { %>
+                <div class="empty">
+                    <i class="fas fa-file-pdf"></i>
+                    <p>هیچ آزمونی برای این رشته وجود ندارد</p>
+                </div>
+            <% } %>
+        </div>
+    <% }) %>
+</div>

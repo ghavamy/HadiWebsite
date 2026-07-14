@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/assets/css/admin.css">
+</head>
+<body>
+    <!-- Sidebar Overlay (for mobile) -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+    
+    <!-- Sidebar Toggle Button (mobile) -->
+    <button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+    
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <h2><i class="fas fa-crown"></i> پنل مدیریت</h2>
+            <p>مدیریت آزمون‌ها و محتوا</p>
+        </div>
+        
+        <div class="sidebar-divider">منوی اصلی</div>
+        <ul class="sidebar-menu">
+            <li>
+                <a href="/admin/exams" class="<%= currentPage === 'exams' ? 'active' : '' %>">
+                    <i class="fas fa-file-pdf"></i>
+                    مدیریت آزمون‌ها
+                    <span class="badge"><%= fileCount || 0 %></span>
+                </a>
+            </li>
+            <li>
+                <a href="#" class="<%= currentPage === 'courses' ? 'active' : '' %>">
+                    <i class="fas fa-book"></i>
+                   (به زودی) مدیریت دوره‌ها
+                </a>
+            </li>
+            <li>
+                <a href="/admin/blog" class="<%= currentPage === 'blog' ? 'active' : '' %>">
+                    <i class="fas fa-newspaper"></i>
+                    مدیریت مقالات
+                </a>
+            </li>
+            <li>
+                <a href="#" class="<%= currentPage === 'users' ? 'active' : '' %>">
+                    <i class="fas fa-users"></i>
+                   (به زودی) مدیریت کاربران
+                </a>
+            </li>
+            <li>
+                <a href="#" class="<%= currentPage === 'instructors' ? 'active' : '' %>">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                   (به زودی) مدیریت مدرسان
+                </a>
+            </li>
+        </ul>
+        
+        <div class="sidebar-divider">تنظیمات</div>
+        <ul class="sidebar-menu">
+            <li>
+                <a href="#" class="<%= currentPage === 'settings' ? 'active' : '' %>">
+                    <i class="fas fa-cog"></i>
+                   (به زودی) تنظیمات
+                </a>
+            </li>
+            <li>
+                <a href="/">
+                    <i class="fas fa-sign-out-alt"></i>
+                    خروج
+                </a>
+            </li>
+        </ul>
+    </nav>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            <%- body %>
+        </div>
+    </div>
+    <script src="/assets/js/admin.js"></script>
+</body>
+</html>

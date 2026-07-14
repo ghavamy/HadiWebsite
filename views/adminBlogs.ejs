@@ -1,0 +1,227 @@
+<div data-editing="<%= typeof editPost !== 'undefined' && editPost ? 'true' : 'false' %>">
+    <!-- Header -->
+    <div class="header">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h1><i class="fas fa-newspaper"></i> مدیریت مقالات</h1>
+        </div>
+    </div>
+    
+    <!-- Alerts -->
+    <% if (typeof error !== 'undefined' && error) { %>
+        <div class="alert alert-danger"><%= error %></div>
+    <% } %>
+    <% if (typeof success !== 'undefined' && success) { %>
+        <div class="alert alert-success"><%= success %></div>
+    <% } %>
+    
+    <!-- Tabs -->
+    <div style="display: flex; gap: 10px; margin-bottom: 30px; background: white; padding: 10px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+        <button class="tab-btn active" onclick="showTab('list')" style="padding: 10px 25px; background: #4a6cf7; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; font-family: inherit; transition: all 0.3s ease;">
+            <i class="fas fa-list"></i> لیست مقالات
+        </button>
+        <button class="tab-btn" onclick="showTab('create')" style="padding: 10px 25px; background: transparent; color: #64748b; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; font-family: inherit; transition: all 0.3s ease;">
+            <i class="fas fa-plus-circle"></i> مقاله جدید
+        </button>
+    </div>
+    
+    <!-- Tab Content: List Posts -->
+    <div id="tab-list" class="tab-content active">
+        <div style="background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+            <% if (posts && posts.length > 0) { %>
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+                    <% posts.forEach(post => { %>
+                        <div style="background: #f8fafc; border-radius: 12px; overflow: hidden; transition: all 0.3s ease; border: 1px solid #eef2f6;">
+                            <img src="<%= post.image %>" alt="<%= post.title %>" style="width: 100%; height: 180px; object-fit: cover;">
+                            <div style="padding: 20px;">
+                                <h3 style="font-size: 16px; font-weight: 600; color: #1a1a2e; margin-bottom: 8px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                                    <%= post.title %>
+                                </h3>
+                                <div style="display: flex; gap: 15px; font-size: 12px; color: #94a3b8; margin-bottom: 10px; flex-wrap: wrap;">
+                                    <span><i class="fas fa-calendar-alt"></i> <%= post.date %></span>
+                                    <span><i class="fas fa-user"></i> <%= post.author %></span>
+                                    <span><i class="fas fa-folder"></i> <%= post.category %></span>
+                                </div>
+                                <p style="font-size: 13px; color: #64748b; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 15px;">
+                                    <%= post.excerpt %>
+                                </p>
+                                <div style="display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 15px;">
+                                    <% post.tags.forEach(tag => { %>
+                                        <span style="background: #e2e8f0; padding: 2px 10px; border-radius: 12px; font-size: 11px; color: #64748b;"><%= tag %></span>
+                                    <% }) %>
+                                </div>
+                                <div style="display: flex; gap: 8px; border-top: 1px solid #e2e8f0; padding-top: 15px; flex-wrap: wrap;">
+                                    <a href="/admin/blog/edit/<%= post.id %>" style="padding: 6px 14px; background: #e2e8f0; color: #475569; border: none; border-radius: 6px; font-size: 13px; cursor: pointer; transition: all 0.3s ease; font-family: inherit;">
+                                        <i class="fas fa-edit"></i> ویرایش
+                                    </a>
+                                    <a href="/blog/post/<%= post.id %>" target="_blank" style="padding: 6px 14px; background: #dbeafe; color: #4a6cf7; border-radius: 6px; text-decoration: none; font-size: 13px; transition: all 0.3s ease;">
+                                        <i class="fas fa-eye"></i> مشاهده
+                                    </a>
+                                    <a href="/admin/blog/delete/<%= post.id %>" style="padding: 6px 14px; background: #fee2e2; color: #dc3545; border-radius: 6px; text-decoration: none; font-size: 13px; transition: all 0.3s ease;" onclick="return confirm('آیا از حذف این مقاله مطمئن هستید؟')">
+                                        <i class="fas fa-trash"></i> حذف
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+            <% } else { %>
+                <div style="text-align: center; padding: 60px 20px; color: #94a3b8;">
+                    <i class="fas fa-newspaper" style="font-size: 48px; display: block; margin-bottom: 15px;"></i>
+                    <h3 style="color: #475569; margin-bottom: 8px;">هیچ مقاله‌ای یافت نشد</h3>
+                    <p>برای شروع، روی دکمه "مقاله جدید" کلیک کنید.</p>
+                </div>
+            <% } %>
+        </div>
+    </div>
+    
+    <!-- Tab Content: Create/Edit Form -->
+    <div id="tab-create" class="tab-content">
+        <div style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+            <h3 id="form-title" style="margin-bottom: 20px;"><i class="fas fa-plus-circle"></i> ایجاد مقاله جدید</h3>
+                
+            <form id="blogForm" action="<%= editPost ? '/admin/blog/update/' + editPost.id : '/admin/blog/create' %>" method="POST" enctype="multipart/form-data">
+                <input type="hidden" id="postId" name="postId" value="<%= editPost ? editPost.id : '' %>">
+                
+                <div class="form-group">
+                    <label>عنوان مقاله *</label>
+                    <!-- ✅ Prefill title -->
+                    <input type="text" id="postTitle" name="title" placeholder="عنوان مقاله را وارد کنید" value="<%= editPost ? editPost.title : '' %>" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>تاریخ</label>
+                        <!-- ✅ Prefill date -->
+                        <input type="text" id="postDate" name="date" placeholder="مثلاً دی 1404" value="<%= editPost ? editPost.date : '' %>">
+                        <div class="help-text">خالی بگذارید تا تاریخ فعلی استفاده شود</div>
+                    </div>
+                    <div class="form-group">
+                        <label>نویسنده</label>
+                        <!-- ✅ Prefill author -->
+                        <input type="text" id="postAuthor" name="author" placeholder="نام نویسنده" value="<%= editPost ? editPost.author : '' %>">
+                        <div class="help-text">خالی بگذارید تا "مدیر سایت" استفاده شود</div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>دسته‌بندی</label>
+                        <!-- ✅ Prefill category -->
+                        <select id="postCategory" name="category">
+                            <option value="تحصیلات" <%= editPost && editPost.category === 'تحصیلات' ? 'selected' : '' %>>تحصیلات</option>
+                            <option value="کنکور" <%= editPost && editPost.category === 'کنکور' ? 'selected' : '' %>>کنکور</option>
+                            <option value="مشاوره" <%= editPost && editPost.category === 'مشاوره' ? 'selected' : '' %>>مشاوره</option>
+                            <option value="روانشناسی" <%= editPost && editPost.category === 'روانشناسی' ? 'selected' : '' %>>روانشناسی</option>
+                            <option value="موفقیت" <%= editPost && editPost.category === 'موفقیت' ? 'selected' : '' %>>موفقیت</option>
+                            <option value="عمومی" <%= editPost && editPost.category === 'عمومی' ? 'selected' : '' %>>عمومی</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>برچسب‌ها</label>
+                        <!-- ✅ Prefill tags (convert array to string) -->
+                        <input type="text" id="postTags" name="tags" placeholder="تحصیلات, کنکور, موفقیت" value="<%= editPost ? editPost.tags.join(', ') : '' %>">
+                        <div class="help-text">برچسب‌ها را با کاما جدا کنید</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>تصویر شاخص</label>
+                    <input type="file" id="postImage" name="image" accept="image/*">
+                    <div class="help-text">تصویر با کیفیت بالا (JPEG, PNG, WEBP) - حداکثر 5MB</div>
+                    
+                    <!-- ✅ Show current image when editing -->
+                    <% if (editPost && editPost.image) { %>
+                        <div id="currentImage" style="margin-top: 10px; padding: 15px; background: #f8fafc; border-radius: 8px; display: flex; align-items: center; gap: 15px; border: 1px solid #eef2f6;">
+                            <img src="<%= editPost.image %>" alt="تصویر فعلی" style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px;">
+                            <div>
+                                <strong style="display: block; color: #1a1a2e;">تصویر فعلی</strong>
+                                <span style="font-size: 12px; color: #94a3b8;"><%= editPost.image %></span>
+                            </div>
+                        </div>
+                    <% } %>
+                </div>
+                
+                <div class="form-group">
+                    <label>خلاصه مقاله</label>
+                    <!-- ✅ Prefill excerpt -->
+                    <textarea id="postExcerpt" name="excerpt" placeholder="خلاصه مقاله را وارد کنید" rows="3"><%= editPost ? editPost.excerpt : '' %></textarea>
+                    <div class="help-text">خالی بگذارید تا به صورت خودکار از متن مقاله تولید شود</div>
+                </div>
+                
+                <div class="form-group">
+                    <label>متن مقاله *</label>
+                    <!-- ✅ Prefill content -->
+                    <textarea id="postContent" name="content" placeholder="متن مقاله را با HTML وارد کنید..." rows="10" required><%= editPost ? editPost.content : '' %></textarea>
+                    <div class="help-text">می‌توانید از تگ‌های HTML مانند &lt;h2&gt;, &lt;p&gt;, &lt;ul&gt;, &lt;li&gt; استفاده کنید</div>
+                </div>
+                
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-save"></i> 
+                        <span id="submitBtnText"><%= editPost ? 'ویرایش مقاله' : 'ذخیره مقاله' %></span>
+                    </button>
+                    <button type="button" class="btn-cancel" onclick="showTab('list')">انصراف</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for Tab Switching and Form Handling -->
+<script>
+    // Tab switching
+    function showTab(tab) {
+        document.querySelectorAll('.tab-content').forEach(el => {
+            el.style.display = 'none';
+        });
+        document.getElementById('tab-' + tab).style.display = 'block';
+        
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.style.background = 'transparent';
+            btn.style.color = '#64748b';
+        });
+        
+        const buttons = document.querySelectorAll('.tab-btn');
+        if (tab === 'list') {
+            buttons[0].style.background = '#4a6cf7';
+            buttons[0].style.color = 'white';
+        } else {
+            buttons[1].style.background = '#4a6cf7';
+            buttons[1].style.color = 'white';
+        }
+    }
+    
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        // ✅ Get the div with data-editing
+        var container = document.querySelector('[data-editing]');
+        var editPost = container ? container.dataset.editing === 'true' : false;
+        if (editPost) {
+            document.getElementById('tab-create').style.display = 'block';
+            document.querySelector('.tab-btn').style.background = 'transparent';
+            document.querySelector('.tab-btn').style.color = '#64748b';
+            document.querySelectorAll('.tab-btn')[1].style.background = '#4a6cf7';
+            document.querySelectorAll('.tab-btn')[1].style.color = 'white';
+            document.getElementById('tab-list').style.display = 'none';
+        } else {
+            document.getElementById('tab-list').style.display = 'block';
+            document.querySelectorAll('.tab-btn')[0].style.background = '#4a6cf7';
+            document.querySelectorAll('.tab-btn')[0].style.color = 'white';
+            document.getElementById('tab-create').style.display = 'none';
+        }
+    });
+</script>
+
+<!-- CSS for tab content -->
+<style>
+    .tab-content {
+        display: none;
+    }
+    .tab-content.active {
+        display: block;
+    }
+    .tab-btn.active {
+        background: #4a6cf7 !important;
+        color: white !important;
+    }
+</style>
