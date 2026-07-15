@@ -29,92 +29,62 @@
             <ul class="learn-press-courses" data-layout="grid">
 
             <% courses.forEach(course => { %>
-
             <li class="lp_course course">
                 <div class="course-item">
-
                     <div class="course-wrap-thumbnail">
                         <div class="course-thumbnail">
                             <a href="/course/<%= course.slug %>">
                                 <div class="thumbnail-preview">
                                     <div class="thumbnail">
                                         <div class="centered">
-                                            <img
-                                                width="370"
-                                                height="280"
-                                                src="<%= course.image %>"
-                                                alt="<%= course.title %>"
-                                            >
+                                            <img width="370" height="280" src="<%= course.image %>" alt="<%= course.title %>">
                                         </div>
                                     </div>
                                 </div>
                             </a>
                         </div>
                     </div>
-
                     <div class="course-content">
-
                         <div class="course-categories">
                             <a href="#">
                                 <%= course.category %>
                             </a>
                         </div>
-
                         <span class="course-instructor">
                             <a href="#">
                                 <span><%= course.instructor %></span>
                             </a>
                         </span>
-
-                        <a
-                            href="/course/<%= course.slug %>"
-                            class="course-permalink"
-                        >
-                            <h3 class="course-title">
-                                <%= course.title %>
-                            </h3>
+                        <a href="/course/<%= course.slug %>" class="course-permalink" >
+                            <h3 class="course-title"> <%= course.title %></h3>
                         </a>
-
                         <div class="course-wrap-meta">
-
                             <div class="meta-item meta-item-duration">
                                 <%= course.duration %>
                             </div>
-
                             <div class="meta-item meta-item-level">
                                 <%= course.level %>
                             </div>
-
                             <div class="meta-item meta-item-lesson">
                                 <span class="meta-number">
                                     <%= course.lessons %> درس
                                 </span>
                             </div>
-
                             <div class="meta-item meta-item-quiz">
                                 <span class="meta-number">
                                     <%= course.quizzes %> آزمون
                                 </span>
                             </div>
-
                             <div class="meta-item meta-item-student">
                                 <span class="meta-number">
                                     <%= course.students %> دانش آموز
                                 </span>
                             </div>
-
                         </div>
-
                         <div class="separator"></div>
-
                         <div class="course-info">
-
-                            <div class="course-excerpt">
-                                <%= course.excerpt %>
-                            </div>
-
+                            <div class="course-excerpt"><%= course.excerpt %></div>
                             <div class="clearfix"></div>
-
                             <div class="course-footer">
                                 <div class="course-price">
                                     <span class="price">
@@ -122,22 +92,16 @@
                                     </span>
                                 </div>
                             </div>
-
                             <div class="course-readmore">
                                 <a href="/course/<%= course.slug %>">
                                     بیشتر
                                 </a>
                             </div>
-
                         </div>
-
                     </div>
-
                 </div>
             </li>
-
             <% }) %>
-
             </ul>
             <nav class="learn-press-pagination navigation pagination">
                 <ul class="page-numbers">

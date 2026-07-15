@@ -10,6 +10,7 @@ import registerRoutes from "./routes/register.js";
 import downloadRoutes from "./routes/download.js";
 import adminExamRoutes from "./routes/admin/adminExam.js";
 import adminBlogRoutes from "./routes/admin/adminBlog.js";
+import adminCourseRoutes from "./routes/admin/adminCourse.js";
 import courseRoutes from "./routes/course.js";
 import blogRoutes from "./routes/blog.js";
 
@@ -105,7 +106,8 @@ app.use("/course", courseRoutes);
 app.use("/register", registerRoutes);
 app.use("/download", downloadRoutes);
 app.use("/admin", adminExamRoutes);
-app.use("/admin", adminBlogRoutes);
+app.use("/admin/blog", adminBlogRoutes);
+app.use("/admin/courses", adminCourseRoutes);
 
 app.get('/', (req, res) => {
     const data = getData();

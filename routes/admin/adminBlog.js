@@ -48,40 +48,18 @@ function getNextPostId(posts) {
     return maxId + 1;
 }
 
-// Helper to get exam count for sidebar
-function getExamCount() {
-    const data = getData();
-    const pdfCourse = data.pdfCourse;
-    if (!pdfCourse) return 0;
-    
-    let count = 0;
-    const subjects = ['experimental', 'math', 'humanities', 'language'];
-    subjects.forEach(subject => {
-        if (pdfCourse[subject] && pdfCourse[subject].sections) {
-            pdfCourse[subject].sections.forEach(section => {
-                if (section.lessons) {
-                    count += section.lessons.length;
-                }
-            });
-        }
-    });
-    return count;
-}
-
 // Main blog management page
-router.get('/blog', (req, res) => {
+router.get('/', (req, res) => {
     try {
         const data = getData();
         const posts = data.posts || [];
         posts.sort((a, b) => b.id - a.id);
-        const totalExams = getExamCount();
         
         res.render('adminBlogs', {
             title: 'مدیریت مقالات',
             layout: 'layouts/admin',
             currentPage: 'blog',
             posts: posts,
-            fileCount: totalExams,
             editPost: null,
             error: req.query.error || null,
             success: req.query.success || null
@@ -93,7 +71,7 @@ router.get('/blog', (req, res) => {
 });
 
 // Get post data for editing
-router.get('/blog/edit/:id', (req, res) => {
+router.get('/edit/:id', (req, res) => {
     try {
         const postId = parseInt(req.params.id);
         const data = getData();
@@ -104,16 +82,13 @@ router.get('/blog/edit/:id', (req, res) => {
             return res.redirect('/admin/blog?error=مقاله یافت نشد');
         }
         
-        const allPosts = data.posts || [];
-        allPosts.sort((a, b) => b.id - a.id);
-        const totalExams = getExamCount();
+        posts.sort((a, b) => b.id - a.id);
         
         res.render('adminBlogs', {
             title: 'ویرایش مقاله',
             layout: 'layouts/admin',
             currentPage: 'blog',
-            posts: allPosts,
-            fileCount: totalExams,
+            posts: posts,
             editPost: post, // Pass the post data to fill the form
             error: req.query.error || null,
             success: req.query.success || null
@@ -125,7 +100,7 @@ router.get('/blog/edit/:id', (req, res) => {
 });
 
 // Create post via AJAX or form
-router.post('/blog/create', upload.single('image'), (req, res) => {
+router.post('/create', upload.single('image'), (req, res) => {
     try {
         const { title, date, author, category, excerpt, content, tags } = req.body;
         const imageFile = req.file;
@@ -163,7 +138,7 @@ router.post('/blog/create', upload.single('image'), (req, res) => {
 });
 
 // Update post
-router.post('/blog/update/:id', upload.single('image'), (req, res) => {
+router.post('/update/:id', upload.single('image'), (req, res) => {
     try {
         const postId = parseInt(req.params.id);
         const { title, date, author, category, excerpt, content, tags } = req.body;
@@ -211,7 +186,7 @@ router.post('/blog/update/:id', upload.single('image'), (req, res) => {
 });
 
 // Delete post
-router.get('/blog/delete/:id', (req, res) => {
+router.get('/delete/:id', (req, res) => {
     try {
         const postId = parseInt(req.params.id);
         const data = getData();

@@ -1,0 +1,631 @@
+<!-- ✅ Store data in a hidden element -->
+<input type="hidden" id="courseInput" value='<%- typeof course !== 'undefined' && course ? JSON.stringify(course) : '' %>'>
+
+<div class="container">
+    <!-- Header -->
+    <div class="header">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h1><i class="fas fa-book"></i> مدیریت دوره‌ها</h1>
+            <button class="btn-add" onclick="showTab('create')">
+                <i class="fas fa-plus"></i> دوره جدید
+            </button>
+        </div>
+    </div>
+    
+    <!-- Alerts -->
+    <% if (typeof error !== 'undefined' && error) { %>
+        <div class="alert alert-danger"><%= error %></div>
+    <% } %>
+    <% if (typeof success !== 'undefined' && success) { %>
+        <div class="alert alert-success"><%= success %></div>
+    <% } %>
+    
+    <!-- Tabs -->
+    <div style="display: flex; gap: 10px; margin-bottom: 30px; background: white; padding: 10px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+        <button class="tab-btn active" onclick="showTab('list')" style="padding: 10px 25px; background: #4a6cf7; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; font-family: inherit; transition: all 0.3s ease;">
+            <i class="fas fa-list"></i> لیست دوره‌ها
+        </button>
+        <button class="tab-btn" onclick="showTab('create')" style="padding: 10px 25px; background: transparent; color: #64748b; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; font-family: inherit; transition: all 0.3s ease;">
+            <i class="fas fa-plus-circle"></i> <span id="tabCreateLabel"><%= course ? 'ویرایش دوره' : 'دوره جدید' %></span>
+        </button>
+    </div>
+    
+    <!-- Tab Content: List Courses -->
+    <div id="tab-list" class="tab-content <%= course ? '' : 'active' %>">
+        <div style="background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+            <% if (courses && courses.length > 0) { %>
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+                    <% courses.forEach(function(course) { %>
+                        <div style="background: #f8fafc; border-radius: 12px; overflow: hidden; transition: all 0.3s ease; border: 1px solid #eef2f6;">
+                            <img src="<%= course.image %>" alt="<%= course.title %>" style="width: 100%; height: 180px; object-fit: cover;">
+                            <div style="padding: 20px;">
+                                <h3 style="font-size: 16px; font-weight: 600; color: #1a1a2e; margin-bottom: 8px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                                    <%= course.title %>
+                                </h3>
+                                <div style="display: flex; gap: 15px; font-size: 12px; color: #94a3b8; margin-bottom: 10px; flex-wrap: wrap;">
+                                    <span><i class="fas fa-tag"></i> <%= course.category %></span>
+                                    <span><i class="fas fa-user"></i> <%= course.instructor %></span>
+                                    <span><i class="fas fa-clock"></i> <%= course.duration %></span>
+                                </div>
+                                <p style="font-size: 13px; color: #64748b; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 15px;">
+                                    <%= course.excerpt || course.title %>
+                                </p>
+                                <div style="display: flex; gap: 8px; border-top: 1px solid #e2e8f0; padding-top: 15px; flex-wrap: wrap;">
+                                    <a href="/admin/courses/edit/<%= course.slug %>" style="padding: 6px 14px; background: #e2e8f0; color: #475569; border-radius: 6px; text-decoration: none; font-size: 13px;">
+                                        <i class="fas fa-edit"></i> ویرایش
+                                    </a>
+                                    <a href="/course/<%= course.slug %>" target="_blank" style="padding: 6px 14px; background: #dbeafe; color: #4a6cf7; border-radius: 6px; text-decoration: none; font-size: 13px;">
+                                        <i class="fas fa-eye"></i> مشاهده
+                                    </a>
+                                    <a href="/admin/courses/delete/<%= course.slug %>" style="padding: 6px 14px; background: #fee2e2; color: #dc3545; border-radius: 6px; text-decoration: none; font-size: 13px;" onclick="return confirm('آیا از حذف این دوره مطمئن هستید؟')">
+                                        <i class="fas fa-trash"></i> حذف
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    <% }); %>
+                </div>
+            <% } else { %>
+                <div style="text-align: center; padding: 60px 20px; color: #94a3b8;">
+                    <i class="fas fa-book" style="font-size: 48px; display: block; margin-bottom: 15px;"></i>
+                    <h3 style="color: #475569; margin-bottom: 8px;">هیچ دوره‌ای یافت نشد</h3>
+                    <p>برای شروع، روی دکمه "دوره جدید" کلیک کنید.</p>
+                </div>
+            <% } %>
+        </div>
+    </div>
+    
+    <!-- Tab Content: Create/Edit Form -->
+    <div id="tab-create" class="tab-content <%= course ? 'active' : '' %>">
+        <div style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+            <h3 id="form-title" style="margin-bottom: 20px;">
+                <i class="fas <%= course ? 'fa-edit' : 'fa-plus-circle' %>"></i> 
+                <%= course ? 'ویرایش دوره' : 'ایجاد دوره جدید' %>
+            </h3>
+            
+            <form id="courseForm" action="<%= course ? '/admin/courses/edit/' + course.slug : '/admin/courses/create' %>" method="POST" enctype="multipart/form-data">
+                <input type="hidden" id="courseSlug" name="slug" value="<%= course ? course.slug : '' %>">
+                
+                <!-- Basic Info -->
+                <h4 style="margin: 20px 0 15px; color: #1a1a2e;">اطلاعات پایه</h4>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>عنوان دوره *</label>
+                        <input type="text" id="courseTitle" name="title" placeholder="عنوان دوره" value="<%= course ? course.title : '' %>" required>
+                    </div>
+                    <div class="form-group">
+                        <label>دسته‌بندی *</label>
+                        <select id="courseCategory" name="category" required>
+                            <option value="">انتخاب...</option>
+                            <option value="فرهنگیان" <%= course && course.category === 'فرهنگیان' ? 'selected' : '' %>>فرهنگیان</option>
+                            <option value="مشاوره" <%= course && course.category === 'مشاوره' ? 'selected' : '' %>>مشاوره</option>
+                            <option value="کنکور" <%= course && course.category === 'کنکور' ? 'selected' : '' %>>کنکور</option>
+                            <option value="برنامه‌ریزی" <%= course && course.category === 'برنامه‌ریزی' ? 'selected' : '' %>>برنامه‌ریزی</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>مدرس</label>
+                        <input type="text" id="courseInstructor" name="instructor" placeholder="نام مدرس" value="<%= course ? course.instructor : '' %>">
+                    </div>
+                    <div class="form-group">
+                        <label>معلم</label>
+                        <input type="text" id="courseTeacher" name="teacher" placeholder="نام معلم" value="<%= course ? course.teacher : '' %>">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>قیمت (تومان)</label>
+                        <input type="text" id="coursePrice" name="price" placeholder="مثلاً 120000" value="<%= course ? course.price : '' %>">
+                    </div>
+                    <div class="form-group">
+                        <label>مدت زمان</label>
+                        <input type="text" id="courseDuration" name="duration" placeholder="مثلاً 10 هفته" value="<%= course ? course.duration : '' %>">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>سطح دوره</label>
+                        <select id="courseLevel" name="level">
+                            <option value="همه سطوح" <%= course && course.level === 'همه سطوح' ? 'selected' : '' %>>همه سطوح</option>
+                            <option value="مقدماتی" <%= course && course.level === 'مقدماتی' ? 'selected' : '' %>>مقدماتی</option>
+                            <option value="متوسط" <%= course && course.level === 'متوسط' ? 'selected' : '' %>>متوسط</option>
+                            <option value="پیشرفته" <%= course && course.level === 'پیشرفته' ? 'selected' : '' %>>پیشرفته</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>تصویر دوره</label>
+                        <input type="file" id="courseImage" name="image" accept="image/*">
+                        <div class="help-text">آپلود تصویر جدید برای جایگزینی تصویر فعلی</div>
+                        <% if (course && course.image) { %>
+                            <div style="margin-top: 10px; padding: 15px; background: #f8fafc; border-radius: 8px; display: flex; align-items: center; gap: 15px; border: 1px solid #eef2f6;">
+                                <img src="<%= course.image %>" alt="<%= course.title %>" style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px;">
+                                <div>
+                                    <strong style="display: block; color: #1a1a2e;">تصویر فعلی</strong>
+                                    <span style="font-size: 12px; color: #94a3b8;"><%= course.image %></span>
+                                </div>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+                
+                <!-- Lists -->
+                <h4 style="margin: 30px 0 15px; color: #1a1a2e;">لیست‌ها</h4>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>پیش‌نیازها</label>
+                        <div id="requirementsContainer"></div>
+                        <button type="button" onclick="addListItem('requirementsContainer', 'requirement-input', 'requirements')" class="btn-add-small">
+                            <i class="fas fa-plus"></i> افزودن پیش‌نیاز
+                        </button>
+                        <input type="hidden" id="requirements" name="requirements">
+                        <div class="help-text">پیش‌نیازهای دوره را وارد کنید</div>
+                    </div>
+                    <div class="form-group">
+                        <label>دستاوردها</label>
+                        <div id="outcomesContainer"></div>
+                        <button type="button" onclick="addListItem('outcomesContainer', 'outcome-input', 'outcomes')" class="btn-add-small">
+                            <i class="fas fa-plus"></i> افزودن دستاورد
+                        </button>
+                        <input type="hidden" id="outcomes" name="outcomes">
+                        <div class="help-text">دستاوردهای دوره را وارد کنید</div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>مخاطبان هدف</label>
+                        <div id="audienceContainer"></div>
+                        <button type="button" onclick="addListItem('audienceContainer', 'audience-input', 'targetAudience')" class="btn-add-small">
+                            <i class="fas fa-plus"></i> افزودن مخاطب
+                        </button>
+                        <input type="hidden" id="targetAudience" name="targetAudience">
+                        <div class="help-text">مخاطبان هدف دوره را وارد کنید</div>
+                    </div>
+                    <div class="form-group">
+                        <label>خلاصه دوره</label>
+                        <input type="text" id="courseExcerpt" name="excerpt" placeholder="خلاصه کوتاه از دوره" value="<%= course ? course.excerpt : '' %>">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>توضیحات کلی</label>
+                    <div id="overviewContainer"></div>
+                    <button type="button" onclick="addListItem('overviewContainer', 'overview-input', 'overview')" class="btn-add-small">
+                        <i class="fas fa-plus"></i> افزودن توضیح
+                    </button>
+                    <input type="hidden" id="overview" name="overview">
+                    <div class="help-text">توضیحات کلی دوره</div>
+                </div>
+                
+                <!-- FAQS -->
+                <h4 style="margin: 30px 0 15px; color: #1a1a2e;">سوالات متداول</h4>
+                <div id="faqsContainer"></div>
+                <button type="button" onclick="addFaqItem()" class="btn-add-small">
+                    <i class="fas fa-plus"></i> افزودن سوال متداول
+                </button>
+                <input type="hidden" id="faqs" name="faqs">
+                
+                <!-- Sections & Lessons -->
+                <h4 style="margin: 30px 0 15px; color: #1a1a2e;">بخش‌ها و جلسات</h4>
+                <div id="sectionsContainer"></div>
+                <button type="button" onclick="addSectionItem()" class="btn-add-small">
+                    <i class="fas fa-plus"></i> افزودن بخش جدید
+                </button>
+                <input type="hidden" id="sections" name="sections">
+                
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button type="submit" class="btn-submit" onclick="prepareFormData()">
+                        <i class="fas fa-save"></i> <%= course ? 'ویرایش دوره' : 'ایجاد دوره' %>
+                    </button>
+                    <button type="button" class="btn-cancel" onclick="showTab('list')">انصراف</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ============ DATA FROM SERVER ============
+    var courseData = document.getElementById('courseInput').value ? JSON.parse(document.getElementById('courseInput').value) : null;
+    var isEditing = courseData ? true : false;
+    
+    // ============ TAB SWITCHING ============
+    function showTab(tab) {
+        document.querySelectorAll('.tab-content').forEach(function(el) {
+            el.classList.remove('active');
+            el.style.display = 'none';
+        });
+        document.getElementById('tab-' + tab).classList.add('active');
+        document.getElementById('tab-' + tab).style.display = 'block';
+        
+        document.querySelectorAll('.tab-btn').forEach(function(btn) {
+            btn.style.background = 'transparent';
+            btn.style.color = '#64748b';
+        });
+        
+        var buttons = document.querySelectorAll('.tab-btn');
+        if (tab === 'list') {
+            buttons[0].style.background = '#4a6cf7';
+            buttons[0].style.color = 'white';
+        } else {
+            buttons[1].style.background = '#4a6cf7';
+            buttons[1].style.color = 'white';
+        }
+    }
+    
+    // ============ LIST ITEMS (Requirements, Outcomes, etc.) ============
+    
+    function addListItem(containerId, inputClass, hiddenFieldId) {
+        var container = document.getElementById(containerId);
+        var newItem = document.createElement('div');
+        newItem.className = 'list-item';
+        newItem.style.cssText = 'display: flex; gap: 10px; margin-bottom: 8px;';
+        newItem.innerHTML = `
+            <input type="text" class="${inputClass}" placeholder="مقدار را وارد کنید" style="flex: 1; padding: 8px 12px; border: 2px solid #e2e8f0; border-radius: 8px;">
+            <button type="button" onclick="removeListItem(this)" class="btn-remove" style="background: #fee2e2; color: #dc3545; border: none; border-radius: 4px; padding: 4px 10px; cursor: pointer;">✕</button>
+        `;
+        container.appendChild(newItem);
+        updateHiddenField(containerId, inputClass, hiddenFieldId);
+    }
+    
+    function removeListItem(button) {
+        var item = button.parentElement;
+        var container = item.parentElement;
+        item.remove();
+        var inputClass = container.querySelector('input') ? container.querySelector('input').className : '';
+        var hiddenFieldId = container.id.replace('Container', '');
+        updateHiddenField(container.id, inputClass, hiddenFieldId);
+    }
+    
+    function updateHiddenField(containerId, inputClass, hiddenFieldId) {
+        var container = document.getElementById(containerId);
+        var inputs = container.querySelectorAll('input.' + inputClass);
+        var values = [];
+        inputs.forEach(function(input) {
+            if (input.value.trim()) {
+                values.push(input.value.trim());
+            }
+        });
+        var hiddenField = document.getElementById(hiddenFieldId);
+        if (hiddenField) {
+            hiddenField.value = values.join(', ');
+        }
+    }
+    
+    function loadListItems(containerId, inputClass, hiddenFieldId, values) {
+        var container = document.getElementById(containerId);
+        container.innerHTML = '';
+        if (values && values.length > 0) {
+            values.forEach(function(value) {
+                var newItem = document.createElement('div');
+                newItem.className = 'list-item';
+                newItem.style.cssText = 'display: flex; gap: 10px; margin-bottom: 8px;';
+                newItem.innerHTML = `
+                    <input type="text" class="${inputClass}" value="${value}" style="flex: 1; padding: 8px 12px; border: 2px solid #e2e8f0; border-radius: 8px;">
+                    <button type="button" onclick="removeListItem(this)" class="btn-remove" style="background: #fee2e2; color: #dc3545; border: none; border-radius: 4px; padding: 4px 10px; cursor: pointer;">✕</button>
+                `;
+                container.appendChild(newItem);
+            });
+        } else {
+            addListItem(containerId, inputClass, hiddenFieldId);
+        }
+        updateHiddenField(containerId, inputClass, hiddenFieldId);
+    }
+    
+    // Update hidden fields on input change
+    document.addEventListener('input', function(e) {
+        if (e.target.classList.contains('requirement-input')) {
+            updateHiddenField('requirementsContainer', 'requirement-input', 'requirements');
+        } else if (e.target.classList.contains('outcome-input')) {
+            updateHiddenField('outcomesContainer', 'outcome-input', 'outcomes');
+        } else if (e.target.classList.contains('audience-input')) {
+            updateHiddenField('audienceContainer', 'audience-input', 'targetAudience');
+        } else if (e.target.classList.contains('overview-input')) {
+            updateHiddenField('overviewContainer', 'overview-input', 'overview');
+        } else if (e.target.classList.contains('faq-question') || e.target.classList.contains('faq-answer')) {
+            updateFaqsHiddenField();
+        } else if (e.target.classList.contains('section-title') || 
+                   e.target.classList.contains('section-description') ||
+                   e.target.classList.contains('lesson-session') ||
+                   e.target.classList.contains('lesson-title') ||
+                   e.target.classList.contains('lesson-video') ||
+                   e.target.classList.contains('lesson-content')) {
+            updateSectionsHiddenField();
+        }
+    });
+    
+    // ============ FAQS ============
+    
+    function addFaqItem(question, answer) {
+        var container = document.getElementById('faqsContainer');
+        var itemCount = container.children.length + 1;
+        var newItem = document.createElement('div');
+        newItem.className = 'faq-item';
+        newItem.style.cssText = 'background: #f8fafc; padding: 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #eef2f6;';
+        newItem.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <strong>سوال ${itemCount}</strong>
+                <button type="button" onclick="removeFaqItem(this)" class="btn-remove" style="background: #fee2e2; color: #dc3545; border: none; border-radius: 4px; padding: 4px 10px; cursor: pointer;">✕ حذف</button>
+            </div>
+            <div class="form-group" style="margin-bottom: 10px;">
+                <label>سوال</label>
+                <input type="text" class="faq-question" placeholder="سوال را وارد کنید" value="${question || ''}">
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+                <label>پاسخ</label>
+                <textarea class="faq-answer" placeholder="پاسخ را وارد کنید" rows="2">${answer || ''}</textarea>
+            </div>
+        `;
+        container.appendChild(newItem);
+        updateFaqsHiddenField();
+    }
+    
+    function removeFaqItem(button) {
+        var item = button.closest('.faq-item');
+        item.remove();
+        updateFaqsHiddenField();
+        var items = document.querySelectorAll('.faq-item');
+        items.forEach(function(item, index) {
+            item.querySelector('strong').textContent = 'سوال ' + (index + 1);
+        });
+    }
+    
+    function updateFaqsHiddenField() {
+        var items = document.querySelectorAll('.faq-item');
+        var faqs = [];
+        items.forEach(function(item) {
+            var question = item.querySelector('.faq-question').value.trim();
+            var answer = item.querySelector('.faq-answer').value.trim();
+            if (question || answer) {
+                faqs.push({ question: question, answer: answer });
+            }
+        });
+        document.getElementById('faqs').value = JSON.stringify(faqs);
+    }
+    
+    function loadFaqs(faqs) {
+        var container = document.getElementById('faqsContainer');
+        container.innerHTML = '';
+        if (faqs && faqs.length > 0) {
+            faqs.forEach(function(faq) {
+                addFaqItem(faq.question, faq.answer);
+            });
+        } else {
+            addFaqItem('', '');
+        }
+        updateFaqsHiddenField();
+    }
+    
+    // ============ SECTIONS & LESSONS ============
+    
+    function addSectionItem(sectionData) {
+        var container = document.getElementById('sectionsContainer');
+        var sectionCount = container.children.length + 1;
+        var newItem = document.createElement('div');
+        newItem.className = 'section-item';
+        newItem.style.cssText = 'background: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #eef2f6;';
+        newItem.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <strong>بخش ${sectionCount}</strong>
+                <button type="button" onclick="removeSectionItem(this)" class="btn-remove" style="background: #fee2e2; color: #dc3545; border: none; border-radius: 4px; padding: 4px 10px; cursor: pointer;">✕ حذف بخش</button>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>عنوان بخش</label>
+                    <input type="text" class="section-title" placeholder="عنوان بخش" value="${sectionData ? sectionData.title || '' : ''}">
+                </div>
+                <div class="form-group">
+                    <label>توضیحات بخش</label>
+                    <input type="text" class="section-description" placeholder="توضیحات بخش" value="${sectionData ? sectionData.description || '' : ''}">
+                </div>
+            </div>
+            <h5 style="margin: 15px 0 10px; color: #475569;">جلسات این بخش</h5>
+            <div class="lessons-container" style="margin-bottom: 10px;"></div>
+            <button type="button" onclick="addLessonItem(this)" class="btn-add-small">
+                <i class="fas fa-plus"></i> افزودن جلسه به این بخش
+            </button>
+        `;
+        container.appendChild(newItem);
+        
+        if (sectionData && sectionData.lessons) {
+            var lessonsContainer = newItem.querySelector('.lessons-container');
+            sectionData.lessons.forEach(function(lesson) {
+                addLessonItemDirect(lessonsContainer, lesson);
+            });
+        } else {
+            var lessonsContainer = newItem.querySelector('.lessons-container');
+            addLessonItemDirect(lessonsContainer, null);
+        }
+        
+        updateSectionsHiddenField();
+    }
+    
+    function removeSectionItem(button) {
+        var item = button.closest('.section-item');
+        item.remove();
+        updateSectionsHiddenField();
+        var items = document.querySelectorAll('.section-item');
+        items.forEach(function(item, index) {
+            item.querySelector('strong').textContent = 'بخش ' + (index + 1);
+        });
+    }
+    
+    function addLessonItem(button) {
+        var sectionItem = button.closest('.section-item');
+        var lessonsContainer = sectionItem.querySelector('.lessons-container');
+        addLessonItemDirect(lessonsContainer, null);
+        updateSectionsHiddenField();
+    }
+    
+    function addLessonItemDirect(lessonsContainer, lessonData) {
+        var lessonCount = lessonsContainer.children.length + 1;
+        var newItem = document.createElement('div');
+        newItem.className = 'lesson-item';
+        newItem.style.cssText = 'background: white; padding: 15px; border-radius: 6px; margin-bottom: 10px; border: 1px solid #e2e8f0;';
+        newItem.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <strong>جلسه ${lessonCount}</strong>
+                <button type="button" onclick="removeLessonItem(this)" class="btn-remove" style="background: #fee2e2; color: #dc3545; border: none; border-radius: 4px; padding: 4px 10px; cursor: pointer;">✕ حذف جلسه</button>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>شماره جلسه</label>
+                    <input type="number" class="lesson-session" placeholder="شماره جلسه" value="${lessonData ? lessonData.session || lessonCount : lessonCount}">
+                </div>
+                <div class="form-group">
+                    <label>عنوان جلسه</label>
+                    <input type="text" class="lesson-title" placeholder="عنوان جلسه" value="${lessonData ? lessonData.title || '' : ''}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>لینک ویدئو</label>
+                <input type="text" class="lesson-video" placeholder="لینک ویدئو" value="${lessonData ? lessonData.video || '' : ''}">
+            </div>
+            <div class="form-group">
+                <label>محتوای جلسه</label>
+                <textarea class="lesson-content" placeholder="محتوای جلسه (هر خط یک پاراگراف)" rows="3">${lessonData && lessonData.content ? lessonData.content.join('\n') : ''}</textarea>
+                <div class="help-text">هر خط یک پاراگراف</div>
+            </div>
+        `;
+        lessonsContainer.appendChild(newItem);
+    }
+    
+    function removeLessonItem(button) {
+        var lessonItem = button.closest('.lesson-item');
+        var lessonsContainer = lessonItem.parentElement;
+        lessonItem.remove();
+        var lessons = lessonsContainer.querySelectorAll('.lesson-item');
+        lessons.forEach(function(lesson, index) {
+            lesson.querySelector('strong').textContent = 'جلسه ' + (index + 1);
+        });
+        updateSectionsHiddenField();
+    }
+    
+    function updateSectionsHiddenField() {
+        var sectionItems = document.querySelectorAll('.section-item');
+        var sections = [];
+        sectionItems.forEach(function(section) {
+            var title = section.querySelector('.section-title').value.trim();
+            var description = section.querySelector('.section-description').value.trim();
+            var lessonItems = section.querySelectorAll('.lesson-item');
+            var lessons = [];
+            lessonItems.forEach(function(lesson) {
+                var session = parseInt(lesson.querySelector('.lesson-session').value) || 0;
+                var titleVal = lesson.querySelector('.lesson-title').value.trim();
+                var video = lesson.querySelector('.lesson-video').value.trim();
+                var content = lesson.querySelector('.lesson-content').value.trim();
+                var contentArray = content ? content.split('\n').filter(function(line) { return line.trim(); }) : [];
+                if (titleVal) {
+                    lessons.push({
+                        session: session,
+                        title: titleVal,
+                        video: video || '',
+                        content: contentArray
+                    });
+                }
+            });
+            if (title) {
+                sections.push({
+                    title: title,
+                    description: description || '',
+                    lessons: lessons
+                });
+            }
+        });
+        document.getElementById('sections').value = JSON.stringify(sections);
+    }
+    
+    function loadSections(sections) {
+        var container = document.getElementById('sectionsContainer');
+        container.innerHTML = '';
+        if (sections && sections.length > 0) {
+            sections.forEach(function(section) {
+                addSectionItem(section);
+            });
+        } else {
+            addSectionItem(null);
+        }
+        updateSectionsHiddenField();
+    }
+    
+    function prepareFormData() {
+        updateHiddenField('requirementsContainer', 'requirement-input', 'requirements');
+        updateHiddenField('outcomesContainer', 'outcome-input', 'outcomes');
+        updateHiddenField('audienceContainer', 'audience-input', 'targetAudience');
+        updateHiddenField('overviewContainer', 'overview-input', 'overview');
+        updateFaqsHiddenField();
+        updateSectionsHiddenField();
+        return true;
+    }
+    
+    // ============ INITIALIZE FORM WITH DATA ============
+    document.addEventListener('DOMContentLoaded', function() {
+        if (courseData) {
+            loadListItems('requirementsContainer', 'requirement-input', 'requirements', courseData.requirements || []);
+            loadListItems('outcomesContainer', 'outcome-input', 'outcomes', courseData.outcomes || []);
+            loadListItems('audienceContainer', 'audience-input', 'targetAudience', courseData.targetAudience || []);
+            loadListItems('overviewContainer', 'overview-input', 'overview', courseData.overview || []);
+            loadFaqs(courseData.faqs || []);
+            loadSections(courseData.sections || []);
+        } else {
+            addListItem('requirementsContainer', 'requirement-input', 'requirements');
+            addListItem('outcomesContainer', 'outcome-input', 'outcomes');
+            addListItem('audienceContainer', 'audience-input', 'targetAudience');
+            addListItem('overviewContainer', 'overview-input', 'overview');
+            addFaqItem('', '');
+            addSectionItem(null);
+        }
+    });
+</script>
+
+<style>
+    .tab-content {
+        display: none;
+    }
+    .tab-content.active {
+        display: block !important;
+    }
+    .tab-btn.active {
+        background: #4a6cf7 !important;
+        color: white !important;
+    }
+    .btn-add-small {
+        padding: 6px 15px;
+        background: #e2e8f0;
+        color: #475569;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 13px;
+        font-family: inherit;
+        transition: all 0.3s ease;
+        margin-top: 5px;
+    }
+    .btn-add-small:hover {
+        background: #cbd5e1;
+    }
+    .list-item {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 8px;
+    }
+    .list-item input {
+        flex: 1;
+        padding: 8px 12px;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 14px;
+        font-family: inherit;
+    }
+    .list-item input:focus {
+        border-color: #4a6cf7;
+        outline: none;
+    }
+</style>

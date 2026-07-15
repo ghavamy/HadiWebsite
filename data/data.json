@@ -102,16 +102,16 @@
   "comments": [],
   "courses": [
     {
-      "slug": "hoosh-va-estedad-tahlili",
+      "slug": "hosh-va-estedad-tahsili",
       "title": "هوش و استعداد تحلیلی فرهنگیان",
       "category": "فرهنگیان",
       "instructor": "هوش و استعداد تحلیلی",
       "teacher": "کاوه قوامی خطیب",
       "teacherImage": "/assets/img/author_5.jpg",
       "image": "/assets/img/course/هوش و استعداد تحلیلی فرهنگیان.png",
-      "price": "120000",
+      "price": "250000",
       "duration": "10 هفته",
-      "level": "همه مراحل",
+      "level": "همه سطوح",
       "requirements": [
         "آشنایی اولیه با آزمون فرهنگیان",
         "داشتن دفترچه یادداشت"
@@ -125,8 +125,7 @@
         "دانشجویان"
       ],
       "overview": [
-        "توضیح اول دوره",
-        "توضیح دوم دوره"
+        "توضیح اول دوره\r\nتوضیح دوم دوره"
       ],
       "faqs": [
         {
@@ -186,7 +185,8 @@
             }
           ]
         }
-      ]
+      ],
+      "excerpt": ""
     },
     {
       "slug": "moarefi-reshteh-ha",

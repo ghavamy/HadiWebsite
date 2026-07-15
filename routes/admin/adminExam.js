@@ -66,7 +66,6 @@ router.get('/exams', async (req, res) => {
     try {
         const db = await getDb();
         const exams = await db.all('SELECT * FROM pdf_exams ORDER BY year DESC, grade ASC');
-        const examsCount = await db.all('SELECT COUNT(*) as count FROM pdf_exams');
         
         const subjects = ['experimental', 'math', 'humanities', 'language'];
         const subjectNames = {
@@ -129,7 +128,6 @@ router.get('/exams', async (req, res) => {
             title: 'مدیریت آزمون‌ها',
             layout: 'layouts/admin',
             currentPage: 'exams',
-            fileCount: examsCount.count,
             subjects: subjects,
             examsData: examsData,
             subjectNames: subjectNames,
